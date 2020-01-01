@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_main"
+    app:startDestination="@id/CommunicableUserListFragment">
+
+    <fragment
+        android:id="@+id/CommunicableUserListFragment"
+        android:name="com.komeyama.offline.chat.ui.CommunicableUserList.CommunicableUserListFragment"
+        android:label="CommunicableUserListFragment"
+        tools:layout="@layout/fragment_communicable">
+    </fragment>
+
+    <fragment
+        android:id="@+id/CommunicationHistoryListFragment"
+        android:name="com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListFragment"
+        android:label="CommunicationHistoryListFragment"
+        tools:layout="@layout/fragment_history">
+    </fragment>
+
+    <fragment
+        android:id="@+id/SettingFragment"
+        android:name="com.komeyama.offline.chat.ui.Setting.SettingFragment"
+        android:label="SettingFragment"
+        tools:layout="@layout/fragment_setting">
+    </fragment>
+</navigation>
