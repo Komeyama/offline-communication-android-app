@@ -23,7 +23,7 @@ class SettingFragment :Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_communicable, container, false)
+        val view = inflater.inflate(R.layout.fragment_setting, container, false)
 
         (activity?.application as MainApplication).appComponent.injectionToSettingFragment(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingViewModel::class.java)

@@ -22,7 +22,7 @@ class CommunicationHistoryListFragment :Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_communicable, container, false)
+        val view = inflater.inflate(R.layout.fragment_history, container, false)
 
         (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CommunicationHistoryListViewModel::class.java)

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">offline-communication-android-app</string>
+    <string name="setting_account_name">Name</string>
 </resources>
