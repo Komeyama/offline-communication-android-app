@@ -1,7 +1,6 @@
 package com.komeyama.offline.chat.ui
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 import javax.inject.Inject

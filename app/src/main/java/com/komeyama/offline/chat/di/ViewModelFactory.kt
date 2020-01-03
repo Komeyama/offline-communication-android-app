@@ -2,7 +2,7 @@ package com.komeyama.offline.chat.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.komeyama.offline.chat.ui.CommunicableUserList.CommunicableUserListViewModel
+import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListViewModel
 import com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListViewModel
 import com.komeyama.offline.chat.ui.MainViewModel
 import com.komeyama.offline.chat.ui.Setting.SettingViewModel

@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.CommunicableUserList
+package com.komeyama.offline.chat.ui.communicableuserlist
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

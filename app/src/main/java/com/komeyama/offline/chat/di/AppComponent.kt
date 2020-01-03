@@ -1,7 +1,7 @@
 package com.komeyama.offline.chat.di
 
 import android.app.Application
-import com.komeyama.offline.chat.ui.CommunicableUserList.CommunicableUserListFragment
+import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragment
 import com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListFragment
 import com.komeyama.offline.chat.ui.MainActivity
 import com.komeyama.offline.chat.ui.Setting.SettingFragment

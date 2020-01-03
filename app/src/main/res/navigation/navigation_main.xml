@@ -8,9 +8,9 @@
 
     <fragment
         android:id="@+id/CommunicableUserListFragment"
-        android:name="com.komeyama.offline.chat.ui.CommunicableUserList.CommunicableUserListFragment"
+        android:name="com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragment"
         android:label="CommunicableUserListFragment"
-        tools:layout="@layout/fragment_communicable">
+        tools:layout="@layout/fragment_communicable_user_list">
     </fragment>
 
     <fragment
