@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.Setting
+package com.komeyama.offline.chat.ui.setting
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

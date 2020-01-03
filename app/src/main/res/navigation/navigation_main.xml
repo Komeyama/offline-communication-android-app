@@ -15,14 +15,14 @@
 
     <fragment
         android:id="@+id/CommunicationHistoryListFragment"
-        android:name="com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListFragment"
+        android:name="com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragment"
         android:label="CommunicationHistoryListFragment"
         tools:layout="@layout/fragment_history">
     </fragment>
 
     <fragment
         android:id="@+id/SettingFragment"
-        android:name="com.komeyama.offline.chat.ui.Setting.SettingFragment"
+        android:name="com.komeyama.offline.chat.ui.setting.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
     </fragment>

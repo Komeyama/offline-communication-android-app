@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.CommunicationHistoryList
+package com.komeyama.offline.chat.ui.communicationhistorylist
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,9 +1,9 @@
 package com.komeyama.offline.chat.di
 
 import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListViewModel
-import com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListViewModel
+import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListViewModel
 import com.komeyama.offline.chat.ui.MainViewModel
-import com.komeyama.offline.chat.ui.Setting.SettingViewModel
+import com.komeyama.offline.chat.ui.setting.SettingViewModel
 import dagger.Module
 import dagger.Provides
 import javax.inject.Provider

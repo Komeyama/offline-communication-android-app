@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.Setting
+package com.komeyama.offline.chat.ui.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.SettingViewModelFactory
-import com.komeyama.offline.chat.ui.CommunicationHistoryList.CommunicationHistoryListViewModel
 import javax.inject.Inject
 
 class SettingFragment :Fragment(){
