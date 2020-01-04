@@ -11,6 +11,9 @@
         android:name="com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragment"
         android:label="CommunicableUserListFragment"
         tools:layout="@layout/fragment_communicable_user_list">
+        <action
+            android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
+            app:destination="@id/CommunicationFragment" />
     </fragment>
 
     <fragment
@@ -26,4 +29,9 @@
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
     </fragment>
+
+    <fragment
+        android:id="@+id/CommunicationFragment"
+        android:name="com.komeyama.offline.chat.ui.communication.CommunicationFragment"
+        android:label="CommunicationFragment" />
 </navigation>

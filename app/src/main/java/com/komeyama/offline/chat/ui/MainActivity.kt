@@ -2,6 +2,7 @@ package com.komeyama.offline.chat.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupWithNavController
@@ -22,9 +23,24 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment)
         setupWithNavController(bottom_navigation, navController)
+        navController.addOnDestinationChangedListener{ _ , destination , _ ->
+            when (destination.id) {
+                R.id.CommunicationFragment -> setVisibilityOfBottomNavigation(false)
+                else -> setVisibilityOfBottomNavigation(true)
+            }
+        }
 
         (application as MainApplication).appComponent.injectionToMainActivity(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         viewModel.test()
+
+    }
+
+    private fun setVisibilityOfBottomNavigation(isVisible:Boolean) {
+        if (isVisible) {
+            bottom_navigation.visibility = View.VISIBLE
+        } else {
+            bottom_navigation.visibility = View.GONE
+        }
     }
 }

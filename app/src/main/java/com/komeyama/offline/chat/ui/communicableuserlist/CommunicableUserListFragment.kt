@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.komeyama.offline.chat.R
@@ -41,6 +42,7 @@ class CommunicableUserListFragment :Fragment(){
 
         viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
             Timber.d("active user click: " + it.id + ", " +it.name)
+            findNavController().navigate(R.id.action_CommunicableUserListFragment_to_CommunicationFragment)
         })
 
         binding.recyclerView.findViewById<RecyclerView>(R.id.recycler_view).apply {
