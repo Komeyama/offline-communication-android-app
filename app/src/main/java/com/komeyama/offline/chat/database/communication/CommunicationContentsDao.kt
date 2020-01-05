@@ -7,7 +7,7 @@ import androidx.room.Query
 @Dao
 interface CommunicationContentsDao {
     @Insert
-    fun insert(user: CommunicationContentsEntities)
+    fun insert(communicationContentsEntities: CommunicationContentsEntities)
 
     @Query("SELECT * FROM communication_contents_entities ORDER BY communicationId DESC")
     fun getAllCommunicationList(): List<CommunicationContentsEntities>

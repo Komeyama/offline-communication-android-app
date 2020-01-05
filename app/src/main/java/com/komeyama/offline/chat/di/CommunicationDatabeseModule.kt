@@ -10,7 +10,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class CommunicationDatabeseModule {
+class CommunicationDatabaseModule {
     @Singleton
     @Provides
     fun provideCommunicationContentsDatabase(application: Application): CommunicationContentsDatabase {
