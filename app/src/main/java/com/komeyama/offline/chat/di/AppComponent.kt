@@ -7,8 +7,16 @@ import com.komeyama.offline.chat.ui.MainActivity
 import com.komeyama.offline.chat.ui.setting.SettingFragment
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
-@Component(modules=[AppModule::class])
+@Singleton
+@Component(
+    modules=[
+        AppModule::class,
+        ViewModelModule::class,
+        CommunicationDatabeseModule::class
+    ]
+)
 interface AppComponent {
 
     fun injectionToMainActivity(activity: MainActivity)
