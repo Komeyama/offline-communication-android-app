@@ -15,22 +15,23 @@ import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.databinding.ActiveUserItemBinding
 import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
-import com.komeyama.offline.chat.di.CommunicableUserListViewModelFactory
+import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.ui.MainViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicableUserListFragment :Fragment(){
 
     @Inject
-    lateinit var viewModelFactory: CommunicableUserListViewModelFactory
-    private lateinit var viewModel: CommunicableUserListViewModel
+    lateinit var viewModelFactory: MainViewModelFactory
+    private lateinit var viewModel: MainViewModel
 
     private lateinit var viewModelAdapter: CommunicableUserListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(CommunicableUserListViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
         val binding: FragmentCommunicableUserListBinding = DataBindingUtil.inflate(
             inflater,

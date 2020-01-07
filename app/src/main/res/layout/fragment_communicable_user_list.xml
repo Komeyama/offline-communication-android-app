@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListViewModel"/>
+            type="com.komeyama.offline.chat.ui.MainViewModel"/>
     </data>
 
     <androidx.recyclerview.widget.RecyclerView
