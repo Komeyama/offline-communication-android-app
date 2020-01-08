@@ -7,6 +7,7 @@ import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
 import com.komeyama.offline.chat.database.userinfo.UserInformationDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
+import com.komeyama.offline.chat.service.NearbyService
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val application: Application,
     private val communicationContentsDao: CommunicationContentsDao,
-    private val userInformationDao: UserInformationDao
+    private val userInformationDao: UserInformationDao,
+    private val nearbyService: NearbyService
 ): ViewModel(){
 
     @SuppressLint("CheckResult")

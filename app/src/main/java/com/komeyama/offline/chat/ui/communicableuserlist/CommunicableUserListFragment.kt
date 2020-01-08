@@ -32,6 +32,7 @@ class CommunicableUserListFragment :Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
+        Timber.d("viewmodel: " + viewModel)
 
         val binding: FragmentCommunicableUserListBinding = DataBindingUtil.inflate(
             inflater,

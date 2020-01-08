@@ -28,12 +28,9 @@ interface AppComponent {
 
     fun injectionToSettingFragment(fragment: SettingFragment)
 
-    @Component.Builder
-    interface Builder{
-        fun build(): AppComponent
-
-        @BindsInstance
-        fun application(application:Application): Builder
+    @Component.Factory
+    interface Factory {
+        fun create(@BindsInstance application:Application): AppComponent
     }
 
 }
