@@ -15,7 +15,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val application: Application,
     private val communicationContentsDao: CommunicationContentsDao,
     private val userInformationDao: UserInformationDao,
     private val nearbyService: NearbyService
@@ -23,8 +22,6 @@ class MainViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     fun test() {
-        Timber.d("test main view model: " + application.toString())
-
         /*
         val mockEntity = CommunicationContentsEntities(
             0,
