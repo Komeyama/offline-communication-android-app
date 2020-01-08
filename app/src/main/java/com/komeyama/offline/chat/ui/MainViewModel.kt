@@ -1,7 +1,6 @@
 package com.komeyama.offline.chat.ui
 
 import android.annotation.SuppressLint
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
@@ -19,6 +18,11 @@ class MainViewModel @Inject constructor(
     private val userInformationDao: UserInformationDao,
     private val nearbyService: NearbyService
 ): ViewModel(){
+
+    fun startServices() {
+        Timber.d("start services")
+        nearbyService.startNearbyServices("")
+    }
 
     @SuppressLint("CheckResult")
     fun test() {

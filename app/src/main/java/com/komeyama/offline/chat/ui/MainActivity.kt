@@ -1,5 +1,6 @@
 package com.komeyama.offline.chat.ui
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -10,14 +11,19 @@ import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.RuntimePermissions
 import javax.inject.Inject
 
+@RuntimePermissions
 class MainActivity : AppCompatActivity() {
 
     @Inject lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        startServicesWithPermissionCheck()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -34,7 +40,28 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         viewModel.test()
 
+        startServices()
+
+
     }
+
+    @NeedsPermission(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+    fun startServices() {
+        viewModel.startServices()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        onRequestPermissionsResult(requestCode, grantResults)
+    }
+
 
     private fun setVisibilityOfBottomNavigation(isVisible:Boolean) {
         if (isVisible) {
@@ -43,4 +70,5 @@ class MainActivity : AppCompatActivity() {
             bottom_navigation.visibility = View.GONE
         }
     }
+
 }
