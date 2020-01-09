@@ -15,7 +15,8 @@ import javax.inject.Singleton
         AppModule::class,
         ViewModelModule::class,
         CommunicationDatabaseModule::class,
-        UserInfoDatabaseModule::class
+        UserInfoDatabaseModule::class,
+        NearbyModule::class
     ]
 )
 interface AppComponent {

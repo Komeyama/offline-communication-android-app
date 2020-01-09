@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.service
+package com.komeyama.offline.chat.nearbyclient
 
 import android.app.Application
 import com.google.android.gms.nearby.Nearby
@@ -6,12 +6,12 @@ import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
 import javax.inject.Inject
 
-class NearbyService @Inject constructor( application: Application) {
+class NearbyClient @Inject constructor(application: Application) {
 
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
 
-    fun startNearbyServices(userNameAndId: String) {
+    fun startNearbyClient(userNameAndId: String) {
         startAdvertising(userNameAndId)
         startDiscovery()
     }

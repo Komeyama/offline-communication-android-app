@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        startServicesWithPermissionCheck()
+        startNearbyClientWithPermissionCheck()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         viewModel.test()
 
-        startServices()
+        startNearbyClient()
 
 
     }
@@ -49,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
-    fun startServices() {
-        viewModel.startServices()
+    fun startNearbyClient() {
+        viewModel.startNearbyClient()
     }
 
     override fun onRequestPermissionsResult(

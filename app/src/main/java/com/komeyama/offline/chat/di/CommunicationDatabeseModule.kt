@@ -5,7 +5,7 @@ import androidx.room.Room
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDatabase
 import com.komeyama.offline.chat.repository.CommunicationRepository
-import com.komeyama.offline.chat.service.NearbyService
+import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -26,8 +26,8 @@ class CommunicationDatabaseModule {
 
     @Singleton
     @Provides
-    fun provideCommunicationRepository(dao: CommunicationContentsDao,nearbyService: NearbyService): CommunicationRepository {
-        return CommunicationRepository(dao, nearbyService)
+    fun provideCommunicationRepository(dao: CommunicationContentsDao, nearbyClient: NearbyClient): CommunicationRepository {
+        return CommunicationRepository(dao, nearbyClient)
     }
 
 }
