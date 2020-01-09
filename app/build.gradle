@@ -38,6 +38,7 @@ dependencies {
     def room_version = '2.2.3'
     def rxjava2_version ='2.2.16'
     def permission_version = '4.1.0'
+    def moshi_version = '1.9.2'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -66,11 +67,14 @@ dependencies {
     debugImplementation'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
     // Permissions Dispatcher
-    implementation 'com.github.hotchemi:permissionsdispatcher:4.1.0'
-    kapt "com.github.hotchemi:permissionsdispatcher-processor:4.1.0"
+    implementation "com.github.hotchemi:permissionsdispatcher:$permission_version"
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:$permission_version"
 
     // Nearby
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
+
+    // Moshi
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'

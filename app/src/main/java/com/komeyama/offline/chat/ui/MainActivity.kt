@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        startNearbyClientWithPermissionCheck()
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -37,12 +35,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         (application as MainApplication).appComponent.injectionToMainActivity(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel =  ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
         viewModel.test()
-
-        startNearbyClient()
-
-
+        startNearbyClientWithPermissionCheck()
     }
 
     @NeedsPermission(
