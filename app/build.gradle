@@ -39,6 +39,8 @@ dependencies {
     def rxjava2_version ='2.2.16'
     def permission_version = '4.1.0'
     def moshi_version = '1.9.2'
+    def mockito_version = '3.2.4'
+    def powermockversion = '2.0.4'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -83,8 +85,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation "android.arch.persistence.room:testing:$room_version" //Room
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
-
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation "android.arch.persistence.room:testing:$room_version" // Room
+    androidTestImplementation "org.mockito:mockito-core:$mockito_version" // mockito
+    androidTestImplementation "org.powermock:powermock-api-mockito2:$powermockversion"  // power mock
+    androidTestImplementation "org.powermock:powermock-module-junit4:$powermockversion" // power mock
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version" // Dagger
 }

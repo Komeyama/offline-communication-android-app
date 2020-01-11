@@ -28,7 +28,6 @@ class CommunicationHistoryListFragment :Fragment(){
 
         (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.test()
         Timber.d("viewmodel: " + viewModel)
 
         return view

@@ -1,12 +1,16 @@
 package com.komeyama.offline.chat.nearbyclient
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
+import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
+import com.komeyama.offline.chat.util.splitUserIdAndName
 import com.squareup.moshi.Moshi
 import io.reactivex.processors.PublishProcessor
 import timber.log.Timber
@@ -16,28 +20,28 @@ import javax.inject.Inject
 class NearbyClient @Inject constructor(
     val application: Application,
     val moshi: Moshi
-) {
+) : NearbyClientBase {
 
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
 
-    private var connectedEndpointId : String = ""
+    private var connectedEndpointId: String = ""
+    private val currentActiveUsrList: MutableList<ActiveUser> = mutableListOf()
 
-
-    private val _aroundEndpointId: PublishProcessor<String> = PublishProcessor.create()
-    val aroundEndpointId: PublishProcessor<String>
-        get() = _aroundEndpointId
+    private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
+    override val aroundEndpointInfo: LiveData<List<ActiveUser>>
+        get() = _aroundEndpointInfo
 
     private val _lostEndpointId: PublishProcessor<String> = PublishProcessor.create()
     val lostEndpointId: PublishProcessor<String>
         get() = _lostEndpointId
 
-    private val _receiveContent: PublishProcessor<CommunicationContent> = PublishProcessor.create()
-    val receiveContent: PublishProcessor<CommunicationContent>
+    private val _receiveContent: PublishProcessor<NearbyCommunicationContent> = PublishProcessor.create()
+    val receiveContent: PublishProcessor<NearbyCommunicationContent>
         get() = _receiveContent
 
-    fun startNearbyClient(userNameAndId: String) {
-        startAdvertising(userNameAndId)
+    fun startNearbyClient(userIdAndName: String) {
+        startAdvertising(userIdAndName)
         startDiscovery()
     }
 
@@ -50,8 +54,8 @@ class NearbyClient @Inject constructor(
         connectionsClient.acceptConnection(acceptEndpointId, payloadCallback)
     }
 
-    fun requestConnection(requestEndpointId: String, userNameAndId: String) {
-        connectionsClient.requestConnection(userNameAndId, requestEndpointId, connectionLifecycleCallback).
+    fun requestConnection(requestEndpointId: String, userIdAndName: String) {
+        connectionsClient.requestConnection(userIdAndName, requestEndpointId, connectionLifecycleCallback).
             addOnSuccessListener {
                 Timber.d("success requestConnection!")
             }.addOnFailureListener {
@@ -75,10 +79,10 @@ class NearbyClient @Inject constructor(
         }
     }
 
-    private fun startAdvertising(userNameAndId: String) {
+    private fun startAdvertising(userIdAndName: String) {
         val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder().setStrategy(P2P_POINT_TO_POINT).build()
         connectionsClient.startAdvertising(
-            userNameAndId,
+            userIdAndName,
             serviceId,
             connectionLifecycleCallback,
             advertisingOptions
@@ -114,7 +118,13 @@ class NearbyClient @Inject constructor(
 
     private val connectionLifecycleCallback = object: ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-            _aroundEndpointId.onNext(endpointId)
+            currentActiveUsrList.add(
+                ActiveUser(
+                    connectionInfo.endpointName.splitUserIdAndName().userId,
+                    connectionInfo.endpointName.splitUserIdAndName().userName,
+                    endpointId)
+            )
+            _aroundEndpointInfo.postValue(currentActiveUsrList)
         }
 
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
@@ -132,7 +142,13 @@ class NearbyClient @Inject constructor(
 
     private val endpointDiscoveryCallback = object: EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            _aroundEndpointId.onNext(endpointId)
+            currentActiveUsrList.remove(
+                ActiveUser(
+                    info.endpointName.splitUserIdAndName().userId,
+                    info.endpointName.splitUserIdAndName().userName,
+                    endpointId)
+            )
+            _aroundEndpointInfo.postValue(currentActiveUsrList)
         }
 
         override fun onEndpointLost(endpointId: String) {
@@ -146,7 +162,7 @@ class NearbyClient @Inject constructor(
             val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).fromJson(receiveMessage)
 
             sendMessage?.let {
-                _receiveContent.onNext(it.asDomainModel())
+                _receiveContent.onNext(it)
             }
         }
 

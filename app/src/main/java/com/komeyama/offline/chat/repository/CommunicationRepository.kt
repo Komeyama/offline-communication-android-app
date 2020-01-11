@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.communication.asDomainModels
-import com.komeyama.offline.chat.domain.CommunicationContent
-import com.komeyama.offline.chat.domain.asDomainModel
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
+import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
+import com.komeyama.offline.chat.nearbyclient.asDomainModel
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ class CommunicationRepository @Inject constructor(
     val nearbyClient: NearbyClient
 ) {
 
-    val communicationContents: LiveData<List<CommunicationContent>> = Transformations.map(dao.getAllCommunicationList()){
+    val communicationContents: LiveData<List<NearbyCommunicationContent>> = Transformations.map(dao.getAllCommunicationList()){
         it.asDomainModels()
     }
 

@@ -1,10 +1,10 @@
 package com.komeyama.offline.chat.domain
 
-import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 
 data class ActiveUser(val id:String,
-                      val name:String)
+                      val name:String,
+                      val endPointId: String)
 
 data class CommunicationContent(val sendUserId:String,
                                 val sendUserName:String,
@@ -22,16 +22,4 @@ fun CommunicationContent.asNearbyMessage(endPointId: String): NearbyCommunicatio
         sendTime,
         endPointId,
         content)
-}
-
-fun CommunicationContent.asDomainModel(): CommunicationContentsEntities {
-    return CommunicationContentsEntities(
-        0,
-        sendUserId,
-        sendUserName,
-        receiveUserId,
-        receiveName,
-        sendTime,
-        content
-    )
 }

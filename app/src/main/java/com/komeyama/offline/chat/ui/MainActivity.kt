@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         (application as MainApplication).appComponent.injectionToMainActivity(this)
         viewModel =  ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.test()
         startNearbyClientWithPermissionCheck()
     }
 

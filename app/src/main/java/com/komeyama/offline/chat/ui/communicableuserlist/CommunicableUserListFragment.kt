@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +33,6 @@ class CommunicableUserListFragment :Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
-        Timber.d("viewmodel: " + viewModel)
 
         val binding: FragmentCommunicableUserListBinding = DataBindingUtil.inflate(
             inflater,
@@ -44,6 +44,7 @@ class CommunicableUserListFragment :Fragment(){
 
         viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
             Timber.d("active user click: " + it.id + ", " +it.name)
+
             findNavController().navigate(R.id.action_CommunicableUserListFragment_to_CommunicationFragment)
         })
 
@@ -53,6 +54,16 @@ class CommunicableUserListFragment :Fragment(){
         }
 
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.activeUserList.observe(viewLifecycleOwner, Observer<List<ActiveUser>> { lists ->
+            lists?.apply {
+                viewModelAdapter?.activeUsers = lists
+            }
+        })
+
     }
 }
 
@@ -70,17 +81,11 @@ class CommunicableUserListHolder(val viewDataBinding: ActiveUserItemBinding): Re
 }
 
 class CommunicableUserListAdapter(val callback:ActiveUserClick) : RecyclerView.Adapter<CommunicableUserListHolder>(){
-    var activeUsers: MutableList<ActiveUser> = mutableListOf(
-        ActiveUser("0","dummy0"),
-        ActiveUser("1","dummy1"),
-        ActiveUser("2","dummy2"),
-        ActiveUser("3","dummy3"),
-        ActiveUser("4","dummy4"),
-        ActiveUser("5","dummy5"),
-        ActiveUser("6","dummy6"),
-        ActiveUser("7","dummy7"),
-        ActiveUser("8","dummy8")
-    )
+    var activeUsers: List<ActiveUser> = emptyList()
+            set(value) {
+                field = value
+                notifyDataSetChanged()
+            }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommunicableUserListHolder {
         val withDataBinding: ActiveUserItemBinding = DataBindingUtil.inflate(

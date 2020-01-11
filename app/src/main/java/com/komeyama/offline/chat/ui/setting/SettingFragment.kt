@@ -28,7 +28,6 @@ class SettingFragment :Fragment(){
 
         (activity?.application as MainApplication).appComponent.injectionToSettingFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.test()
         Timber.d("viewmodel: " + viewModel)
 
         return view
