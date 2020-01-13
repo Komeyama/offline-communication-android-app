@@ -36,6 +36,10 @@ class NearbyClient @Inject constructor(
     val lostEndpointId: PublishProcessor<String>
         get() = _lostEndpointId
 
+    private val _requestedEndpointInfo: MutableLiveData<ActiveUser> = MutableLiveData()
+    val requestedEndpointInfo: LiveData<ActiveUser>
+        get() = _requestedEndpointInfo
+
     private val _receiveContent: PublishProcessor<NearbyCommunicationContent> = PublishProcessor.create()
     val receiveContent: PublishProcessor<NearbyCommunicationContent>
         get() = _receiveContent
@@ -52,6 +56,10 @@ class NearbyClient @Inject constructor(
     fun acceptConnection(acceptEndpointId: String) {
         connectedEndpointId = acceptEndpointId
         connectionsClient.acceptConnection(acceptEndpointId, payloadCallback)
+    }
+
+    fun rejectConnection(rejectEndpointId: String) {
+        connectionsClient.rejectConnection(rejectEndpointId)
     }
 
     fun requestConnection(requestEndpointId: String, userIdAndName: String) {
@@ -118,13 +126,13 @@ class NearbyClient @Inject constructor(
 
     private val connectionLifecycleCallback = object: ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-            currentActiveUsrList.add(
+            _requestedEndpointInfo.postValue(
                 ActiveUser(
                     connectionInfo.endpointName.splitUserIdAndName().userId,
                     connectionInfo.endpointName.splitUserIdAndName().userName,
-                    endpointId)
+                    endpointId
+                )
             )
-            _aroundEndpointInfo.postValue(currentActiveUsrList)
         }
 
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {

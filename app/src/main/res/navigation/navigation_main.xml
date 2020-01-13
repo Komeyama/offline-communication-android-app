@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
             app:destination="@id/CommunicationFragment" />
+        <action
+            android:id="@+id/action_CommunicableUserListFragment_to_ConfirmAcceptanceDialog"
+            app:destination="@+id/ConfirmAcceptanceDialog"/>
     </fragment>
 
     <fragment
@@ -21,6 +24,9 @@
         android:name="com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragment"
         android:label="CommunicationHistoryListFragment"
         tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_CommunicationHistoryListFragment_to_ConfirmAcceptanceDialog"
+            app:destination="@+id/ConfirmAcceptanceDialog"/>
     </fragment>
 
     <fragment
@@ -28,10 +34,19 @@
         android:name="com.komeyama.offline.chat.ui.setting.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_SettingFragment_to_ConfirmAcceptanceDialog"
+            app:destination="@+id/ConfirmAcceptanceDialog"/>
     </fragment>
 
     <fragment
         android:id="@+id/CommunicationFragment"
         android:name="com.komeyama.offline.chat.ui.communication.CommunicationFragment"
         android:label="CommunicationFragment" />
+
+    <dialog
+        android:id="@+id/ConfirmAcceptanceDialog"
+        android:name="com.komeyama.offline.chat.ui.communicableuserlist.ConfirmAcceptanceDialog"
+        android:label="ConfirmAcceptanceDialog"/>
+
 </navigation>

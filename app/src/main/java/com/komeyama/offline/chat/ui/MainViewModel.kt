@@ -17,9 +17,19 @@ class MainViewModel @Inject constructor(
 
     val activeUserList = nearbyClient.aroundEndpointInfo
 
+    val requestedUser = nearbyClient.requestedEndpointInfo
+
     fun startNearbyClient() {
         Timber.d("start nearby client")
         nearbyClient.startNearbyClient("")
+    }
+
+    fun acceptConnection(acceptEndpointId: String) {
+        nearbyClient.acceptConnection(acceptEndpointId)
+    }
+
+    fun rejectConnection(rejectEndpointId: String) {
+        nearbyClient.rejectConnection(rejectEndpointId)
     }
 
     override fun onCleared() {
