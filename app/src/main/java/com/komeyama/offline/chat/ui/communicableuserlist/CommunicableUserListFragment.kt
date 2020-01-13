@@ -19,7 +19,6 @@ import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.ui.MainViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicableUserListFragment :Fragment(){
@@ -43,8 +42,6 @@ class CommunicableUserListFragment :Fragment(){
         binding.viewModel = viewModel
 
         viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
-            Timber.d("active user click: " + it.id + ", " +it.name)
-
             findNavController().navigate(R.id.action_CommunicableUserListFragment_to_CommunicationFragment)
         })
 
@@ -60,7 +57,7 @@ class CommunicableUserListFragment :Fragment(){
         super.onActivityCreated(savedInstanceState)
         viewModel.activeUserList.observe(viewLifecycleOwner, Observer<List<ActiveUser>> { lists ->
             lists?.apply {
-                viewModelAdapter?.activeUsers = lists
+                viewModelAdapter.activeUsers = lists
             }
         })
 

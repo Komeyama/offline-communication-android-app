@@ -33,8 +33,8 @@ class MainViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        nearbyClient.stopNearbyClient()
         super.onCleared()
-
     }
 
 }

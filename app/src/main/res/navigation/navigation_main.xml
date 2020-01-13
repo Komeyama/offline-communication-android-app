@@ -46,7 +46,21 @@
 
     <dialog
         android:id="@+id/ConfirmAcceptanceDialog"
-        android:name="com.komeyama.offline.chat.ui.communicableuserlist.ConfirmAcceptanceDialog"
-        android:label="ConfirmAcceptanceDialog"/>
+        android:name="com.komeyama.offline.chat.ui.ConfirmAcceptanceDialog"
+        android:label="ConfirmAcceptanceDialog">
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue='" "' />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            android:defaultValue='" "' />
+        <argument
+            android:name="endPointId"
+            app:argType="string"
+            android:defaultValue='" "' />
+
+    </dialog>
 
 </navigation>

@@ -50,15 +50,21 @@ class NearbyClient @Inject constructor(
     }
 
     fun stopNearbyClient() {
+        /*
 
+        add nearby stop process
+
+         */
     }
 
     fun acceptConnection(acceptEndpointId: String) {
+        Timber.d("acceptConnection: %s", acceptEndpointId)
         connectedEndpointId = acceptEndpointId
         connectionsClient.acceptConnection(acceptEndpointId, payloadCallback)
     }
 
     fun rejectConnection(rejectEndpointId: String) {
+        Timber.d("rejectConnection: %s", rejectEndpointId)
         connectionsClient.rejectConnection(rejectEndpointId)
     }
 

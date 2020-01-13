@@ -13,6 +13,9 @@ import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragmentDirections
+import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragmentDirections
+import com.komeyama.offline.chat.ui.setting.SettingFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
@@ -48,28 +51,39 @@ class MainActivity : AppCompatActivity() {
     fun startNearbyClient() {
         viewModel.startNearbyClient()
         viewModel.requestedUser.observe(this, Observer<ActiveUser> { user ->
-
-            Timber.d("current destination")
-            navController.currentDestination?.apply {
-                Timber.d("current destination: " + this.navigatorName.toString())
-            }
-
             navController.currentDestination?.apply {
                 when (this.id) {
                     R.id.CommunicableUserListFragment -> {
-                        Timber.d("current destination: 0")
-                        navController.navigate(R.id.action_CommunicableUserListFragment_to_ConfirmAcceptanceDialog)
+                        navController.navigate(
+                            CommunicableUserListFragmentDirections.
+                                actionCommunicableUserListFragmentToConfirmAcceptanceDialog(
+                                    id = user.id,
+                                    userName = user.name,
+                                    endPointId = user.endPointId
+                                )
+                        )
                     }
                     R.id.CommunicationHistoryListFragment -> {
-                        Timber.d("current destination: 1")
-                        navController.navigate(R.id.action_CommunicationHistoryListFragment_to_ConfirmAcceptanceDialog)
+                        navController.navigate(
+                            CommunicationHistoryListFragmentDirections.
+                                actionCommunicationHistoryListFragmentToConfirmAcceptanceDialog(
+                                    id = user.id,
+                                    userName = user.name,
+                                    endPointId = user.endPointId
+                                )
+                        )
                     }
                     R.id.SettingFragment ->{
-                        Timber.d("current destination: 2")
-                        navController.navigate(R.id.action_SettingFragment_to_ConfirmAcceptanceDialog)
+                        navController.navigate(
+                            SettingFragmentDirections.
+                                actionSettingFragmentToConfirmAcceptanceDialog(
+                                    id = user.id,
+                                    userName = user.name,
+                                    endPointId = user.endPointId
+                                )
+                        )
                     }
                     else -> {
-                        Timber.d("current destination: 3")
                         viewModel.rejectConnection(user.endPointId)
                     }
                 }
