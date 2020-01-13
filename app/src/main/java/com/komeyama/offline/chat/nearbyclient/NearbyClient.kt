@@ -20,7 +20,7 @@ import javax.inject.Inject
 class NearbyClient @Inject constructor(
     val application: Application,
     val moshi: Moshi
-) : NearbyClientBase {
+) {
 
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
@@ -29,7 +29,7 @@ class NearbyClient @Inject constructor(
     private val currentActiveUsrList: MutableList<ActiveUser> = mutableListOf()
 
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
-    override val aroundEndpointInfo: LiveData<List<ActiveUser>>
+    val aroundEndpointInfo: LiveData<List<ActiveUser>>
         get() = _aroundEndpointInfo
 
     private val _lostEndpointId: PublishProcessor<String> = PublishProcessor.create()
