@@ -1,7 +1,6 @@
 package com.komeyama.offline.chat
 
 import android.os.SystemClock.sleep
-import androidx.appcompat.app.AlertDialog
 import androidx.arch.core.executor.testing.CountingTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.test.core.app.ActivityScenario
@@ -15,14 +14,16 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
-import timber.log.Timber
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.DrawerActions.close
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.komeyama.offline.chat.util.RequestResult
 import org.junit.After
 import org.junit.Rule
 import java.util.concurrent.TimeUnit
@@ -41,8 +42,9 @@ class ApplicationTest {
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var requestedEndpointInfo: MutableLiveData<ActiveUser>
+    private lateinit var invitedEndpointInfo: MutableLiveData<ActiveUser>
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
+    private lateinit var requestResult: MutableLiveData<RequestResult>
 
     @Before
     fun setUp() {
@@ -57,9 +59,13 @@ class ApplicationTest {
         aroundEndpointInfoFiled.isAccessible = true
         aroundEndpointInfo = aroundEndpointInfoFiled.get(nearbyClient) as MutableLiveData<List<ActiveUser>>
 
-        val requestedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_requestedEndpointInfo")
+        val invitedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_inviteEndpointInfo")
+        invitedEndpointInfoFiled.isAccessible = true
+        invitedEndpointInfo = invitedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<ActiveUser>
+
+        val requestedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_requestResult")
         requestedEndpointInfoFiled.isAccessible = true
-        requestedEndpointInfo = requestedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<ActiveUser>
+        requestResult = requestedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<RequestResult>
     }
 
     @Test
@@ -67,29 +73,30 @@ class ApplicationTest {
         val settingFragmentId = bottomNavigationView.menu.findItem(R.id.SettingFragment).itemId
         onView(withId(settingFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        requestedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
         waitNextProcess(2)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
+        onView(isRoot()).perform(ViewActions.pressBack())
 
         val communicationHistoryListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicationHistoryListFragment).itemId
         onView(withId(communicationHistoryListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        requestedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
         waitNextProcess(2)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
+        onView(isRoot()).perform(ViewActions.pressBack())
 
         val communicableUserListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicableUserListFragment).itemId
         onView(withId(communicableUserListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        requestedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
         waitNextProcess(2)
-        onView(withId(android.R.id.button1)).perform(click())
+        onView(withId(android.R.id.button2)).perform(click())
         waitNextProcess(1)
 
         val currentActiveUsrList = mutableListOf<ActiveUser>()
-        waitNextProcess(2)
         currentActiveUsrList.add(
             ActiveUser("12345a", "nearby test0", "dummy0")
         )
@@ -103,7 +110,13 @@ class ApplicationTest {
         waitNextProcess(2)
         onView(withId(R.id.recycler_view))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
+        waitNextProcess(1)
+        onView(withId(android.R.id.button1)).perform(click())
+        waitNextProcess(3)
+        requestResult.postValue(RequestResult.SUCCESS)
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(2)
+
     }
 
     @After

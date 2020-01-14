@@ -19,6 +19,8 @@ import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.ui.MainViewModel
+import com.komeyama.offline.chat.util.RequestResult
+import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicableUserListFragment :Fragment(){
@@ -38,11 +40,18 @@ class CommunicableUserListFragment :Fragment(){
             R.layout.fragment_communicable_user_list,
             container,
             false)
-
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
-            findNavController().navigate(R.id.action_CommunicableUserListFragment_to_CommunicationFragment)
+            findNavController().navigate(
+                CommunicableUserListFragmentDirections.
+                    actionCommunicableUserListFragmentToConfirmRequestDialog(
+                        id = it.id,
+                        userName = it.name,
+                        endPointId = it.endPointId
+                    )
+            )
         })
 
         binding.recyclerView.findViewById<RecyclerView>(R.id.recycler_view).apply {
@@ -59,6 +68,18 @@ class CommunicableUserListFragment :Fragment(){
             lists?.apply {
                 viewModelAdapter.activeUsers = lists
             }
+        })
+        viewModel.requestResult.observe(viewLifecycleOwner, Observer<RequestResult> {
+            Timber.d("requestResult value: %s", it.toString())
+            when(it) {
+                RequestResult.SUCCESS -> {
+                    findNavController().navigate(
+                        CommunicableUserListFragmentDirections.
+                            actionCommunicableUserListFragmentToCommunicationFragment()
+                    )
+                }
+            }
+
         })
 
     }

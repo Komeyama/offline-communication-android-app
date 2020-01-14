@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.communicableuserlist.CommunicableUserListFragment">
 
     <data>
+        <import type="android.view.View"/>
+        <import type="com.komeyama.offline.chat.util.RequestResult"/>
         <variable
             name="activeUser"
             type="com.komeyama.offline.chat.domain.ActiveUser" />
@@ -14,9 +16,21 @@
             type="com.komeyama.offline.chat.ui.MainViewModel"/>
     </data>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/active_user_item" />
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.requestResult == RequestResult.LOADING ? View.VISIBLE : View.GONE}"
+            android:layout_gravity="center" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/active_user_item" />
+    </FrameLayout>
 </layout>

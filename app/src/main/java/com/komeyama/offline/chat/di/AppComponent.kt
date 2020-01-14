@@ -5,6 +5,7 @@ import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFra
 import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragment
 import com.komeyama.offline.chat.ui.MainActivity
 import com.komeyama.offline.chat.ui.ConfirmAcceptanceDialog
+import com.komeyama.offline.chat.ui.ConfirmRequestDialog
 import com.komeyama.offline.chat.ui.setting.SettingFragment
 import dagger.BindsInstance
 import dagger.Component
@@ -31,6 +32,8 @@ interface AppComponent {
     fun injectionToSettingFragment(fragment: SettingFragment)
 
     fun injectionToConfirmAcceptanceDialog(fragment: ConfirmAcceptanceDialog)
+
+    fun injectionToConfirmRequestDialog(fragment: ConfirmRequestDialog)
 
     @Component.Factory
     interface Factory {

@@ -8,14 +8,13 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import timber.log.Timber
 import javax.inject.Inject
 
-class ConfirmAcceptanceDialog : DialogFragment() {
+class ConfirmRequestDialog : DialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -24,18 +23,17 @@ class ConfirmAcceptanceDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val args = ConfirmAcceptanceDialogArgs.fromBundle(arguments!!)
-        val message: String = getString(R.string.confirm_acceptance_dialog_message) + " " + args.userName
+        val message: String = getString(R.string.confirm_request_dialog_message) + " " + args.userName + " ?"
         return AlertDialog.Builder(requireActivity())
-            .setTitle(R.string.confirm_acceptance_dialog_title)
+            .setTitle(R.string.confirm_request_dialog_title)
             .setMessage(message)
-            .setNegativeButton(R.string.confirm_acceptance_dialog_ng) { _, _ ->
-                Timber.d("dialog fragment ng")
+            .setNegativeButton(R.string.confirm_request_dialog_ng) { _, _ ->
+                Timber.d("dialog request fragment ng")
                 viewModel.rejectConnection(args.endPointId)
             }
-            .setPositiveButton(R.string.confirm_acceptance_dialog_ok) { _, _ ->
-                Timber.d("dialog fragment ok")
-                viewModel.acceptConnection(args.endPointId)
-                findNavController().navigate(R.id.action_ConfirmAcceptanceDialog_to_CommunicationFragment)
+            .setPositiveButton(R.string.confirm_request_dialog_ok) { _, _ ->
+                Timber.d("dialog request fragment ok")
+                viewModel.requestConnection(args.endPointId)
             }
             .create()
     }
@@ -45,7 +43,7 @@ class ConfirmAcceptanceDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity?.application as MainApplication).appComponent.injectionToConfirmAcceptanceDialog(this)
+        (activity?.application as MainApplication).appComponent.injectionToConfirmRequestDialog(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
         return super.onCreateView(inflater, container, savedInstanceState)

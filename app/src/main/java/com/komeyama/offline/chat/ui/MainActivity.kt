@@ -19,7 +19,6 @@ import com.komeyama.offline.chat.ui.setting.SettingFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
-import timber.log.Timber
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
     fun startNearbyClient() {
         viewModel.startNearbyClient()
-        viewModel.requestedUser.observe(this, Observer<ActiveUser> { user ->
+        viewModel.invitedInfo.observe(this, Observer<ActiveUser> { user ->
             navController.currentDestination?.apply {
                 when (this.id) {
                     R.id.CommunicableUserListFragment -> {

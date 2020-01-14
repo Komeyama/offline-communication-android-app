@@ -12,11 +12,14 @@
         android:label="CommunicableUserListFragment"
         tools:layout="@layout/fragment_communicable_user_list">
         <action
-            android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
-            app:destination="@id/CommunicationFragment" />
-        <action
             android:id="@+id/action_CommunicableUserListFragment_to_ConfirmAcceptanceDialog"
             app:destination="@+id/ConfirmAcceptanceDialog"/>
+        <action
+            android:id="@+id/action_CommunicableUserListFragment_to_ConfirmRequestDialog"
+            app:destination="@id/ConfirmRequestDialog" />
+        <action
+            android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
+            app:destination="@id/CommunicationFragment" />
     </fragment>
 
     <fragment
@@ -48,6 +51,9 @@
         android:id="@+id/ConfirmAcceptanceDialog"
         android:name="com.komeyama.offline.chat.ui.ConfirmAcceptanceDialog"
         android:label="ConfirmAcceptanceDialog">
+        <action
+            android:id="@+id/action_ConfirmAcceptanceDialog_to_CommunicationFragment"
+            app:destination="@id/CommunicationFragment" />
         <argument
             android:name="id"
             app:argType="string"
@@ -61,6 +67,23 @@
             app:argType="string"
             android:defaultValue='" "' />
 
+    </dialog>
+    <dialog
+        android:id="@+id/ConfirmRequestDialog"
+        android:name="com.komeyama.offline.chat.ui.ConfirmRequestDialog"
+        android:label="ConfirmRequestDialog" >
+        <argument
+            android:name="endPointId"
+            app:argType="string"
+            android:defaultValue='" "' />
+        <argument
+            android:name="id"
+            app:argType="string"
+            android:defaultValue='" "' />
+        <argument
+            android:name="userName"
+            app:argType="string"
+            android:defaultValue='" "' />
     </dialog>
 
 </navigation>

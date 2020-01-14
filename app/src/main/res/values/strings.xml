@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">offline-communication-android-app</string>
     <string name="setting_account_name">Name</string>
+    <string name="confirm_acceptance_dialog_title">Calling!</string>
+    <string name="confirm_acceptance_dialog_message">Calling from</string>
+    <string name="confirm_acceptance_dialog_ok">Accept</string>
+    <string name="confirm_acceptance_dialog_ng">Reject</string>
+    <string name="confirm_request_dialog_title">Confirm</string>
+    <string name="confirm_request_dialog_message">Do you want to call</string>
+    <string name="confirm_request_dialog_ok">Yes</string>
+    <string name="confirm_request_dialog_ng">No</string>
 </resources>

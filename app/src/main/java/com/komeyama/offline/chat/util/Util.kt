@@ -11,3 +11,10 @@ fun String.splitUserIdAndName(): UserIdAndName{
     val userName = this.substring(indexOfColon + 1, this.length)
     return UserIdAndName(userId, userName)
 }
+
+enum class RequestResult{
+    LOADING,
+    SUCCESS,
+    CANCELED,
+    INTERRUPTED
+}

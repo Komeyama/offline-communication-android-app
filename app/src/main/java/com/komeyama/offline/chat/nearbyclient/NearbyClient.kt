@@ -10,6 +10,7 @@ import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
+import com.komeyama.offline.chat.util.RequestResult
 import com.komeyama.offline.chat.util.splitUserIdAndName
 import com.squareup.moshi.Moshi
 import io.reactivex.processors.PublishProcessor
@@ -36,13 +37,17 @@ class NearbyClient @Inject constructor(
     val lostEndpointId: PublishProcessor<String>
         get() = _lostEndpointId
 
-    private val _requestedEndpointInfo: MutableLiveData<ActiveUser> = MutableLiveData()
-    val requestedEndpointInfo: LiveData<ActiveUser>
-        get() = _requestedEndpointInfo
+    private val _inviteEndpointInfo: MutableLiveData<ActiveUser> = MutableLiveData()
+    val inviteEndpointInfo: LiveData<ActiveUser>
+        get() = _inviteEndpointInfo
 
     private val _receiveContent: PublishProcessor<NearbyCommunicationContent> = PublishProcessor.create()
     val receiveContent: PublishProcessor<NearbyCommunicationContent>
         get() = _receiveContent
+
+    private val _requestResult: MutableLiveData<RequestResult> = MutableLiveData()
+    val requestResult: LiveData<RequestResult>
+        get() = _requestResult
 
     fun startNearbyClient(userIdAndName: String) {
         startAdvertising(userIdAndName)
@@ -50,9 +55,9 @@ class NearbyClient @Inject constructor(
     }
 
     fun stopNearbyClient() {
-        /*
+        /**
 
-        add nearby stop process
+        To do: add nearby stop process
 
          */
     }
@@ -68,15 +73,16 @@ class NearbyClient @Inject constructor(
         connectionsClient.rejectConnection(rejectEndpointId)
     }
 
-    fun requestConnection(requestEndpointId: String, userIdAndName: String) {
+    fun requestConnection(userIdAndName: String, requestEndpointId: String) {
+        _requestResult.postValue(RequestResult.LOADING)
         connectionsClient.requestConnection(userIdAndName, requestEndpointId, connectionLifecycleCallback).
             addOnSuccessListener {
                 Timber.d("success requestConnection!")
             }.addOnFailureListener {
                 Timber.d("failure requestConnection!")
-                /*
+                /**
 
-                 Add retry process
+                To do: Add retry process
 
                  */
             }
@@ -104,9 +110,9 @@ class NearbyClient @Inject constructor(
             Timber.d("success startAdvertising!")
         }.addOnFailureListener {
             Timber.d("failure startAdvertising!")
-            /*
+            /**
 
-             Add retry process
+            To do: Add retry process
 
              */
         }
@@ -122,9 +128,9 @@ class NearbyClient @Inject constructor(
             Timber.d("success startDiscovery!")
         }.addOnFailureListener {
             Timber.d("failure startDiscovery!")
-            /*
+            /**
 
-             Add retry process
+             To do: Add retry process
 
              */
         }
@@ -132,7 +138,7 @@ class NearbyClient @Inject constructor(
 
     private val connectionLifecycleCallback = object: ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-            _requestedEndpointInfo.postValue(
+            _inviteEndpointInfo.postValue(
                 ActiveUser(
                     connectionInfo.endpointName.splitUserIdAndName().userId,
                     connectionInfo.endpointName.splitUserIdAndName().userName,
@@ -145,9 +151,14 @@ class NearbyClient @Inject constructor(
             when(result.status) {
                 Status.RESULT_SUCCESS -> {
                     connectedEndpointId = endpointId
+                    _requestResult.postValue(RequestResult.SUCCESS)
                 }
-                Status.RESULT_CANCELED -> {}
-                Status.RESULT_INTERRUPTED -> {}
+                Status.RESULT_CANCELED -> {
+                    _requestResult.postValue(RequestResult.CANCELED)
+                }
+                Status.RESULT_INTERRUPTED -> {
+                    _requestResult.postValue(RequestResult.INTERRUPTED)
+                }
             }
         }
 
