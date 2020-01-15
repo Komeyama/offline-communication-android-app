@@ -39,12 +39,15 @@ class ApplicationTest {
     @JvmField
     val countingTaskExecutorRule = CountingTaskExecutorRule()
 
+    private var confirmUiDesign = false
+
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var invitedEndpointInfo: MutableLiveData<ActiveUser>
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
     private lateinit var requestResult: MutableLiveData<RequestResult>
+
 
     @Before
     fun setUp() {
@@ -93,8 +96,9 @@ class ApplicationTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
         waitNextProcess(2)
-        onView(withId(android.R.id.button2)).perform(click())
+        onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
+        onView(isRoot()).perform(ViewActions.pressBack())
 
         val currentActiveUsrList = mutableListOf<ActiveUser>()
         currentActiveUsrList.add(
@@ -108,13 +112,22 @@ class ApplicationTest {
         )
         aroundEndpointInfo.postValue(currentActiveUsrList)
         waitNextProcess(2)
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         onView(withId(R.id.recycler_view))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
         waitNextProcess(1)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(3)
+        onView(withId(R.id.recycler_view))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+        onView(withId(R.id.recycler_view))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
+        onView(withId(R.id.recycler_view))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(2, click()))
         requestResult.postValue(RequestResult.SUCCESS)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(3)
+        onView(isRoot()).perform(ViewActions.pressBack())
         waitNextProcess(2)
 
     }
@@ -126,7 +139,10 @@ class ApplicationTest {
 
     // Because of checking dialog design. But I want to change this later.
     fun waitNextProcess(second:Long) {
-        val milliSecond = second * 1000L
+        var milliSecond = 0L
+        if (confirmUiDesign) {
+            milliSecond = second * 1000L
+        }
         sleep(milliSecond)
     }
 

@@ -19,8 +19,6 @@ import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.ui.MainViewModel
-import com.komeyama.offline.chat.util.RequestResult
-import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicableUserListFragment :Fragment(){
@@ -69,24 +67,11 @@ class CommunicableUserListFragment :Fragment(){
                 viewModelAdapter.activeUsers = lists
             }
         })
-        viewModel.requestResult.observe(viewLifecycleOwner, Observer<RequestResult> {
-            Timber.d("requestResult value: %s", it.toString())
-            when(it) {
-                RequestResult.SUCCESS -> {
-                    findNavController().navigate(
-                        CommunicableUserListFragmentDirections.
-                            actionCommunicableUserListFragmentToCommunicationFragment()
-                    )
-                }
-            }
-
-        })
-
     }
 }
 
 class ActiveUserClick(val user:(ActiveUser) -> Unit) {
-    fun onClick(user:ActiveUser) {
+    fun onClick(user: ActiveUser) {
         user(user)
     }
 }
@@ -98,7 +83,7 @@ class CommunicableUserListHolder(val viewDataBinding: ActiveUserItemBinding): Re
     }
 }
 
-class CommunicableUserListAdapter(val callback:ActiveUserClick) : RecyclerView.Adapter<CommunicableUserListHolder>(){
+class CommunicableUserListAdapter(val callback: ActiveUserClick) : RecyclerView.Adapter<CommunicableUserListHolder>(){
     var activeUsers: List<ActiveUser> = emptyList()
             set(value) {
                 field = value

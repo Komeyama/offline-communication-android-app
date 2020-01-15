@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_CommunicationHistoryListFragment_to_ConfirmAcceptanceDialog"
             app:destination="@+id/ConfirmAcceptanceDialog"/>
+        <action
+            android:id="@+id/action_CommunicationHistoryListFragment_to_CommunicationFragment"
+            app:destination="@id/CommunicationFragment" />
     </fragment>
 
     <fragment
@@ -40,6 +43,9 @@
         <action
             android:id="@+id/action_SettingFragment_to_ConfirmAcceptanceDialog"
             app:destination="@+id/ConfirmAcceptanceDialog"/>
+        <action
+            android:id="@+id/action_SettingFragment_to_CommunicationFragment"
+            app:destination="@id/CommunicationFragment" />
     </fragment>
 
     <fragment
