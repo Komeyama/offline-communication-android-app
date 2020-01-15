@@ -89,14 +89,8 @@ class NearbyClient @Inject constructor(
     }
 
     fun sendPayload(communicationContent: CommunicationContent) {
-        val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).
-            toJson(communicationContent.asNearbyMessage(connectedEndpointId))
-
-        sendMessage?.let {
-            connectionsClient.sendPayload(
-                connectedEndpointId,
-                Payload.fromBytes(sendMessage.toString().toByteArray(StandardCharsets.UTF_8)))
-        }
+        val payLoad = createSendPayload(communicationContent, connectedEndpointId)
+        connectionsClient.sendPayload(connectedEndpointId, payLoad)
     }
 
     private fun startAdvertising(userIdAndName: String) {
@@ -183,16 +177,24 @@ class NearbyClient @Inject constructor(
 
     private val payloadCallback = object: PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
-            val receiveMessage =  payload.asBytes().toString()
-            val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).fromJson(receiveMessage)
-
-            sendMessage?.let {
+            val receiveNearbyCommunicationContent = createReceiveNearbyCommunicationContent(payload)
+            receiveNearbyCommunicationContent?.let {
                 _receiveContent.onNext(it)
             }
         }
 
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {}
 
+    }
+
+    private fun createSendPayload(communicationContent: CommunicationContent, endpointId: String): Payload {
+        val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).toJson(communicationContent.asNearbyMessage(endpointId))
+        return Payload.fromBytes(sendMessage.toString().toByteArray(StandardCharsets.UTF_8))
+    }
+
+    private fun createReceiveNearbyCommunicationContent(payload: Payload): NearbyCommunicationContent? {
+        val receiveMessage = payload.asBytes()?.let { String(it) } ?: ""
+        return moshi.adapter(NearbyCommunicationContent::class.java).fromJson(receiveMessage)
     }
 
 }
