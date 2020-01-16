@@ -79,6 +79,9 @@ dependencies {
     // Timber
     implementation "com.jakewharton.timber:timber:${versions.timber_version}"
 
+    // ChatKit
+    implementation "com.github.stfalcon:chatkit:${versions.chatkit_version}"
+
     // test
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'

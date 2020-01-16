@@ -39,7 +39,7 @@ class ApplicationTest {
     @JvmField
     val countingTaskExecutorRule = CountingTaskExecutorRule()
 
-    private var confirmUiDesign = false
+    private var confirmUiDesign = true
 
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
