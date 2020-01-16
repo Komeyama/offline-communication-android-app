@@ -95,5 +95,6 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-core:${versions.mockito_version}" // mockito
     androidTestImplementation "org.powermock:powermock-api-mockito2:${versions.powermockversion}"  // power mock
     androidTestImplementation "org.powermock:powermock-module-junit4:${versions.powermockversion}" // power mock
-    kaptAndroidTest "com.google.dagger:dagger-compiler:${versions.dagger_version}" // Dagger
+    kaptAndroidTest "com.google.dagger:dagger-compiler:${versions.dagger_version}"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.1.0'// Dagger
 }

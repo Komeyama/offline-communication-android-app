@@ -21,13 +21,17 @@ class CommunicationRepository @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    fun reciveNearybyMessage() {
+    fun refreshMessages() {
         nearbyClient.
             receiveContent.
             subscribeOn(Schedulers.io()).
             subscribe {
                 dao.insert(it.asDomainModel())
             }
+    }
+
+    fun stopReciveMessages() {
+        nearbyClient.stopReceivePublish()
     }
 
 }

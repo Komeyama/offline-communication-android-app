@@ -3,6 +3,8 @@ package com.komeyama.offline.chat.database.communication
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
+import com.komeyama.offline.chat.util.toDate
+import java.util.*
 
 @Entity(tableName = "communication_contents_entities")
 data class CommunicationContentsEntities constructor(
@@ -12,7 +14,7 @@ data class CommunicationContentsEntities constructor(
     val sendUserName:String,
     val receiveUserId:String,
     val receiveName:String,
-    val sendTime:String,
+    val sendTime: String,
     val endPointId:String,
     val content:String
 )
@@ -24,7 +26,7 @@ fun List<CommunicationContentsEntities>.asDomainModels(): List<NearbyCommunicati
             it.sendUserName,
             it.receiveUserId,
             it.receiveName,
-            it.sendTime,
+            it.sendTime.toDate(),
             it.endPointId,
             it.content)
     }

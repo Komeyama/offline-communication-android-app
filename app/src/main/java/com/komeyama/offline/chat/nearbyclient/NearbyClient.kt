@@ -88,6 +88,11 @@ class NearbyClient @Inject constructor(
             }
     }
 
+    fun stopReceivePublish(){
+        _receiveContent.onComplete()
+        receiveContent.onComplete()
+    }
+
     fun sendPayload(communicationContent: CommunicationContent) {
         val payLoad = createSendPayload(communicationContent, connectedEndpointId)
         connectionsClient.sendPayload(connectedEndpointId, payLoad)

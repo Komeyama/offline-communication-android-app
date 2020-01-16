@@ -1,7 +1,9 @@
 package com.komeyama.offline.chat.nearbyclient
 
 import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
+import com.komeyama.offline.chat.util.toDateString
 import com.squareup.moshi.JsonClass
+import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class NearbyCommunicationContent(
@@ -9,7 +11,7 @@ data class NearbyCommunicationContent(
     val sendUserName:String,
     val receiveUserId:String,
     val receiveName:String,
-    val sendTime:String,
+    val sendTime: Date,
     val endpointId:String,
     val content:String)
 
@@ -20,7 +22,7 @@ fun NearbyCommunicationContent.asDomainModel(): CommunicationContentsEntities {
         sendUserName,
         receiveUserId,
         receiveName,
-        sendTime,
+        sendTime.toDateString(),
         endpointId,
         content)
 }

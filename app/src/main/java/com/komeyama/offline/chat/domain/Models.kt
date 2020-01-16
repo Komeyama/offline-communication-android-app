@@ -1,6 +1,7 @@
 package com.komeyama.offline.chat.domain
 
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
+import com.komeyama.offline.chat.util.toDate
 
 data class ActiveUser(val id:String,
                       val name:String,
@@ -19,7 +20,7 @@ fun CommunicationContent.asNearbyMessage(endPointId: String): NearbyCommunicatio
         sendUserName,
         receiveUserId,
         receiveName,
-        sendTime,
+        sendTime.toDate(),
         endPointId,
         content)
 }

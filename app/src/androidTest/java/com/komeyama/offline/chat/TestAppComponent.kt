@@ -17,7 +17,9 @@ import javax.inject.Singleton
     ]
 )
 interface TestAppComponent : AppComponent {
-    fun injection(activity: ApplicationTest)
+    fun injectionMenuScreenTransitionTest(activity: MenuScreenTransitionTest)
+
+    fun injectionCommunicationScreenTest(activity: CommunicationScreenTest)
 
     @Component.Factory
     interface Factory {

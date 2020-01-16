@@ -29,7 +29,7 @@ import org.junit.Rule
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
-class ApplicationTest {
+class MenuScreenTransitionTest {
 
     @Rule
     @JvmField
@@ -48,13 +48,12 @@ class ApplicationTest {
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
     private lateinit var requestResult: MutableLiveData<RequestResult>
 
-
     @Before
     fun setUp() {
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MainApplication
         testAppComponent = DaggerTestAppComponent.factory().create(appContext)
         appContext.appComponent = testAppComponent
-        testAppComponent.injection(this)
+        testAppComponent.injectionMenuScreenTransitionTest(this)
         ActivityScenario.launch(MainActivity::class.java)
         bottomNavigationView = activityTestRule.activity.findViewById(R.id.bottom_navigation)
 

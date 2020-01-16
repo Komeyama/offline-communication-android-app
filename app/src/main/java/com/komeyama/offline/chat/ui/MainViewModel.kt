@@ -18,6 +18,7 @@ class MainViewModel @Inject constructor(
     val activeUserList = nearbyClient.aroundEndpointInfo
     val invitedInfo = nearbyClient.inviteEndpointInfo
     val requestResult = nearbyClient.requestResult
+    val communicationContents = communicationRepository.communicationContents
 
     fun startNearbyClient() {
         Timber.d("start nearby client")
@@ -37,6 +38,10 @@ class MainViewModel @Inject constructor(
          * To do: change "userIdAndName" to registered name and id
          */
         nearbyClient.requestConnection("userIdAndName", requestEndpointId)
+    }
+
+    fun startRefreshMessages() {
+        communicationRepository.refreshMessages()
     }
 
     override fun onCleared() {
