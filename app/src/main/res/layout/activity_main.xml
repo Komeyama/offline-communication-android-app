@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:background="?android:attr/windowBackground"
-            app:menu="@menu/bottom_navigation"/>
+            app:menu="@menu/bottom_navigation"
+            app:menuEnable="@{viewModel.requestResult == RequestResult.LOADING ? true : false}"/>
 
         <ProgressBar
             android:id="@+id/loading_spinner"
