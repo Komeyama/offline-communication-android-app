@@ -23,12 +23,15 @@ class CommunicationFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
     lateinit var viewModel: MainViewModel
+    private var communicationOpponentId = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val args = CommunicationFragmentArgs.fromBundle(arguments!!)
+        communicationOpponentId = args.communicationOpponentId
         (activity?.application as MainApplication).appComponent.injectionToCommunicationFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
@@ -45,17 +48,22 @@ class CommunicationFragment : Fragment() {
         val adapter = MessagesListAdapter<Message>("myself", null)
         messagesList.setAdapter(adapter)
 
-        viewModel.communicationContents.observe(viewLifecycleOwner, Observer { list ->
-            list.apply{
+        var oldListSize = 0
+
+        viewModel.selectedUserContent(communicationOpponentId).observe(viewLifecycleOwner, Observer { list ->
+            list.asReversed().apply{
                 this.forEachIndexed { index, value ->
-                    adapter.addToStart(
-                        Message(
-                            index.toString(),
-                            Author(value.sendUserId, value.sendUserName,""),
-                            value.sendTime,
-                            value.content),true
-                    )
+                    if (oldListSize < index + 1) {
+                        adapter.addToStart(
+                            Message(
+                                index.toString(),
+                                Author(value.sendUserId, value.sendUserName,""),
+                                value.sendTime,
+                                value.content),true
+                        )
+                    }
                 }
+                oldListSize = list.size
             }
         })
 

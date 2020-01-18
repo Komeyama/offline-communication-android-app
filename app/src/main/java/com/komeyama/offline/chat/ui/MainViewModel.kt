@@ -1,9 +1,13 @@
 package com.komeyama.offline.chat.ui
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationDao
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
+import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,11 +22,27 @@ class MainViewModel @Inject constructor(
     val activeUserList = nearbyClient.aroundEndpointInfo
     val invitedInfo = nearbyClient.inviteEndpointInfo
     val requestResult = nearbyClient.requestResult
-    val communicationContents = communicationRepository.communicationContents
+
+    fun selectedUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
+        Transformations.switchMap(communicationRepository.communicationContents){ list ->
+            val contentList = mutableListOf<NearbyCommunicationContent>()
+            val selectedContents: MutableLiveData<List<NearbyCommunicationContent>> = MutableLiveData()
+            list.forEach{
+                if (it.sendUserId == communicationOpponentId || it.receiveUserId == communicationOpponentId) {
+                    contentList.add(it)
+                }
+            }
+            selectedContents.value = contentList
+            return@switchMap selectedContents
+        }
 
     fun startNearbyClient() {
         Timber.d("start nearby client")
+        /**
+         * Todo: change "userIdAndName" to registered name and id
+         */
         nearbyClient.startNearbyClient("")
+
     }
 
     fun acceptConnection(acceptEndpointId: String) {
@@ -35,7 +55,7 @@ class MainViewModel @Inject constructor(
 
     fun requestConnection(requestEndpointId: String) {
         /**
-         * To do: change "userIdAndName" to registered name and id
+         * Todo: change "userIdAndName" to registered name and id
          */
         nearbyClient.requestConnection("userIdAndName", requestEndpointId)
     }

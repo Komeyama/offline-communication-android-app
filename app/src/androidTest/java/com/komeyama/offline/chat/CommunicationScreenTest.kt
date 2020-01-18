@@ -68,7 +68,7 @@ class CommunicationScreenTest {
             ActiveUser("12345a", "nearby test0", "dummy0")
         )
         currentActiveUsrList.add(
-            ActiveUser("12345b", "nearby test1", "dummy1")
+            ActiveUser("dummySenderID_0", "dummySenderName", "dummyEndpointId")
         )
         currentActiveUsrList.add(
             ActiveUser("12345c", "nearby test2", "dummy2")
@@ -87,9 +87,13 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
         nearbyClient.receiveContent.onNext(
-            NearbyCommunicationContent("dummySenderID", "dummySenderName", "dummyReceiverID", "dummyReceiverName", Date(), "dummyEndpointId", "Hello!")
+            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date(), "dummyEndpointId", "Hello")
         )
-        waitNextProcess(5)
+        waitNextProcess(3)
+        nearbyClient.receiveContent.onNext(
+            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date(), "dummyEndpointId", "Hello!")
+        )
+        waitNextProcess(10)
     }
 
     @After

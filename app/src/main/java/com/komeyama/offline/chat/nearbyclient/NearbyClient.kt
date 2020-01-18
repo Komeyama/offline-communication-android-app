@@ -56,9 +56,7 @@ class NearbyClient @Inject constructor(
 
     fun stopNearbyClient() {
         /**
-
-        To do: add nearby stop process
-
+         * Todo: add nearby stop process
          */
     }
 
@@ -80,12 +78,10 @@ class NearbyClient @Inject constructor(
                 Timber.d("success requestConnection!")
             }.addOnFailureListener {
                 Timber.d("failure requestConnection!")
-                /**
-
-                To do: Add retry process
-
-                 */
-            }
+            /**
+             * Todo: Add retry process
+             */
+        }
     }
 
     fun stopReceivePublish(){
@@ -110,9 +106,7 @@ class NearbyClient @Inject constructor(
         }.addOnFailureListener {
             Timber.d("failure startAdvertising!")
             /**
-
-            To do: Add retry process
-
+             * Todo: Add retry process
              */
         }
     }
@@ -128,9 +122,7 @@ class NearbyClient @Inject constructor(
         }.addOnFailureListener {
             Timber.d("failure startDiscovery!")
             /**
-
-             To do: Add retry process
-
+             * Todo: Add retry process
              */
         }
     }

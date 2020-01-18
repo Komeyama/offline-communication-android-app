@@ -19,6 +19,8 @@ import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.ui.MainViewModel
+import com.komeyama.offline.chat.util.RequestResult
+import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicableUserListFragment :Fragment(){
@@ -28,6 +30,8 @@ class CommunicableUserListFragment :Fragment(){
     private lateinit var viewModel: MainViewModel
 
     private lateinit var viewModelAdapter: CommunicableUserListAdapter
+
+    private lateinit var communicationOpponentInfo: CommunicationOpponentInfo
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
@@ -42,6 +46,7 @@ class CommunicableUserListFragment :Fragment(){
         binding.viewModel = viewModel
 
         viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
+            communicationOpponentInfo = CommunicationOpponentInfo(it.id, it.name, it.endPointId)
             findNavController().navigate(
                 CommunicableUserListFragmentDirections.
                     actionCommunicableUserListFragmentToConfirmRequestDialog(
@@ -65,6 +70,19 @@ class CommunicableUserListFragment :Fragment(){
         viewModel.activeUserList.observe(viewLifecycleOwner, Observer<List<ActiveUser>> { lists ->
             lists?.apply {
                 viewModelAdapter.activeUsers = lists
+            }
+        })
+        viewModel.requestResult.observe(this, Observer<RequestResult> {
+            when(it) {
+                RequestResult.SUCCESS -> {
+                    findNavController().navigate(
+                        CommunicableUserListFragmentDirections.
+                            actionCommunicableUserListFragmentToCommunicationFragment(communicationOpponentId = communicationOpponentInfo.id)
+                    )
+                }
+                else -> {
+                    Timber.d("request result: %s", it.toString())
+                }
             }
         })
     }
@@ -109,3 +127,9 @@ class CommunicableUserListAdapter(val callback: ActiveUserClick) : RecyclerView.
     }
 
 }
+
+data class CommunicationOpponentInfo(
+    val id: String,
+    val name: String,
+    val endpointId: String
+)

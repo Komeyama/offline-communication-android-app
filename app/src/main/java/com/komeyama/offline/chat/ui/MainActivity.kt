@@ -18,7 +18,6 @@ import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragmentDirections
 import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragmentDirections
 import com.komeyama.offline.chat.ui.setting.SettingFragmentDirections
-import com.komeyama.offline.chat.util.RequestResult
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
@@ -54,14 +53,6 @@ class MainActivity : AppCompatActivity() {
         (application as MainApplication).appComponent.injectionToMainActivity(this)
         viewModel =  ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
-        viewModel.requestResult.observe(this, Observer<RequestResult> {
-            currentFragment
-            when(it) {
-                RequestResult.SUCCESS -> {
-                    currentFragmentToCommunicationFragment()
-                }
-            }
-        })
         binding.viewModel = viewModel
 
         startNearbyClientWithPermissionCheck()
@@ -78,8 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+        grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         onRequestPermissionsResult(requestCode, grantResults)
     }
@@ -89,29 +79,6 @@ class MainActivity : AppCompatActivity() {
             bottom_navigation.visibility = View.VISIBLE
         } else {
             bottom_navigation.visibility = View.GONE
-        }
-    }
-
-    private fun currentFragmentToCommunicationFragment() {
-        when(currentFragment) {
-            R.id.CommunicableUserListFragment -> {
-                navController.navigate(
-                    CommunicableUserListFragmentDirections.
-                        actionCommunicableUserListFragmentToCommunicationFragment()
-                )
-            }
-            R.id.CommunicationHistoryListFragment -> {
-                navController.navigate(
-                    CommunicationHistoryListFragmentDirections.
-                        actionCommunicationHistoryListFragmentToCommunicationFragment()
-                )
-            }
-            R.id.SettingFragment -> {
-                navController.navigate(
-                    SettingFragmentDirections.
-                        actionSettingFragmentToCommunicationFragment()
-                )
-            }
         }
     }
 
