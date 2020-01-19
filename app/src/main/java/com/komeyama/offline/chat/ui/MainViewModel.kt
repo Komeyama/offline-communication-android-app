@@ -1,20 +1,21 @@
 package com.komeyama.offline.chat.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationDao
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicationRepository
+import com.komeyama.offline.chat.service.UserInformationService
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     private val communicationContentsDao: CommunicationContentsDao,
     private val userInformationDao: UserInformationDao,
+    private val userInformationService: UserInformationService,
     private val communicationRepository: CommunicationRepository,
     private val nearbyClient: NearbyClient
 ): ViewModel(){
@@ -22,6 +23,13 @@ class MainViewModel @Inject constructor(
     val activeUserList = nearbyClient.aroundEndpointInfo
     val invitedInfo = nearbyClient.inviteEndpointInfo
     val requestResult = nearbyClient.requestResult
+    private val _isExistUserInformation: MutableLiveData<Boolean> = MutableLiveData()
+    val isExistUserInformation:LiveData<Boolean>
+        get() = _isExistUserInformation
+
+    init {
+        checkUserInformation()
+    }
 
     fun selectedUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
         Transformations.switchMap(communicationRepository.communicationContents){ list ->
@@ -43,6 +51,30 @@ class MainViewModel @Inject constructor(
          */
         nearbyClient.startNearbyClient("")
 
+    }
+
+    private fun checkUserInformation() {
+        viewModelScope.launch {
+            val isExist = userInformationService.existsUserInformation()
+            _isExistUserInformation.postValue(isExist)
+        }
+    }
+
+    fun createUserInformation(userName: String) {
+        viewModelScope.launch {
+            try {
+                userInformationService.insertUserInformation(userName)
+            } catch (error: IOException) {}
+        }
+    }
+
+    fun updateUserName(newUserName: String) {
+        viewModelScope.launch {
+            try {
+                val oldUserInformation = userInformationService.getUserInformation()
+                userInformationService.updateUserInformation(oldUserInformation[0].copy(userName = newUserName))
+            } catch (error: IOException) {}
+        }
     }
 
     fun acceptConnection(acceptEndpointId: String) {

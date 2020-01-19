@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.komeyama.offline.chat.database.userinfo.UserInformationDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationDatabase
+import com.komeyama.offline.chat.service.UserInformationService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -21,6 +22,12 @@ class UserInfoDatabaseModule {
     @Provides
     fun provideUserInformationDao(db: UserInformationDatabase): UserInformationDao {
         return db.userInformationDao
+    }
+
+    @Singleton
+    @Provides
+    fun provideInformationService(dao: UserInformationDao): UserInformationService {
+        return UserInformationService(dao)
     }
 
 }
