@@ -26,7 +26,7 @@ fun List<CommunicationContentsEntities>.asDomainModels(): List<NearbyCommunicati
             it.sendUserName,
             it.receiveUserId,
             it.receiveName,
-            it.sendTime.toDate(),
+            it.sendTime,
             it.endPointId,
             it.content)
     }

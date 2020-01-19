@@ -7,6 +7,7 @@ import com.google.android.gms.nearby.connection.Payload
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
+import com.komeyama.offline.chat.util.toDateString
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import junit.framework.TestCase.assertEquals
@@ -15,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [Build.VERSION_CODES.O_MR1])
@@ -96,8 +98,9 @@ class NearbyClientTest {
             "user name",
             "receiveId",
             "receive name",
-            "2020-01-31 00:11:22",
+            Date(),
             "hello world")
+         print("Date().toDateString(): " + Date().toDateString())
 
         val createSendPayload = NearbyClient::class.java.getDeclaredMethod("createSendPayload", CommunicationContent::class.java, String::class.java)
         createSendPayload.isAccessible = true

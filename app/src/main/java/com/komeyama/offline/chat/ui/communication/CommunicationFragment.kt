@@ -11,6 +11,7 @@ import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.ui.MainViewModel
+import com.komeyama.offline.chat.util.toDate
 import com.stfalcon.chatkit.commons.models.IMessage
 import com.stfalcon.chatkit.commons.models.IUser
 import com.stfalcon.chatkit.messages.MessagesListAdapter
@@ -58,7 +59,7 @@ class CommunicationFragment : Fragment() {
                             Message(
                                 index.toString(),
                                 Author(value.sendUserId, value.sendUserName,""),
-                                value.sendTime,
+                                value.sendTime.toDate(),
                                 value.content),true
                         )
                     }

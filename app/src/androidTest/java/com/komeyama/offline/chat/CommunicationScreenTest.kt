@@ -18,6 +18,7 @@ import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.ui.MainActivity
 import com.komeyama.offline.chat.util.RequestResult
+import com.komeyama.offline.chat.util.toDateString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -87,11 +88,11 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
         nearbyClient.receiveContent.onNext(
-            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date(), "dummyEndpointId", "Hello")
+            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "dummyEndpointId", "Hello")
         )
         waitNextProcess(3)
         nearbyClient.receiveContent.onNext(
-            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date(), "dummyEndpointId", "Hello!")
+            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "dummyEndpointId", "Hello!")
         )
         waitNextProcess(10)
     }
