@@ -27,6 +27,8 @@ class MainViewModel @Inject constructor(
     val isExistUserInformation:LiveData<Boolean>
         get() = _isExistUserInformation
 
+    val isCloseDialog:MutableLiveData<Boolean> = MutableLiveData()
+
     init {
         checkUserInformation()
     }
@@ -79,6 +81,7 @@ class MainViewModel @Inject constructor(
 
     fun setUserName() {
         Timber.d("set user name!")
+        isCloseDialog.postValue(true)
     }
 
     fun acceptConnection(acceptEndpointId: String) {
