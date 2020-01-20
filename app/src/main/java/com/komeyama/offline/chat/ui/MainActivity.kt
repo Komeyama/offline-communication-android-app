@@ -21,6 +21,7 @@ import com.komeyama.offline.chat.ui.setting.SettingFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
+import timber.log.Timber
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -54,6 +55,13 @@ class MainActivity : AppCompatActivity() {
         viewModel =  ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         binding.viewModel = viewModel
+
+        // If necessary display initial setting dialog.
+        viewModel.isExistUserInformation.observe(this, Observer<Boolean>{
+            if (!it) {
+                navController.navigate(CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToInitialSettingDialog())
+            }
+        })
 
         startNearbyClientWithPermissionCheck()
     }

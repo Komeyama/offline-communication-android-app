@@ -77,6 +77,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun setUserName() {
+        Timber.d("set user name!")
+    }
+
     fun acceptConnection(acceptEndpointId: String) {
         nearbyClient.acceptConnection(acceptEndpointId)
     }

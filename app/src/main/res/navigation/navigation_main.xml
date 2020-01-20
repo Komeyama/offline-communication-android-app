@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
             app:destination="@id/CommunicationFragment" />
+        <action
+            android:id="@+id/action_CommunicableUserListFragment_to_initialSettingDialog"
+            app:destination="@id/initialSettingDialog" />
     </fragment>
 
     <fragment
@@ -90,5 +93,9 @@
             app:argType="string"
             android:defaultValue='" "' />
     </dialog>
+    <dialog
+        android:id="@+id/initialSettingDialog"
+        android:name="com.komeyama.offline.chat.ui.InitialSettingDialog"
+        android:label="InitialSettingDialog" />
 
 </navigation>
