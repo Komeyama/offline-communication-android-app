@@ -27,10 +27,11 @@ class MainViewModel @Inject constructor(
     val isExistUserInformation:LiveData<Boolean>
         get() = _isExistUserInformation
 
-    val isCloseDialog:MutableLiveData<Boolean> = MutableLiveData()
+    val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
+    val nameText: MutableLiveData<String> = MutableLiveData()
 
     init {
-        checkUserInformation()
+        hasUserInformation()
     }
 
     fun selectedUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
@@ -55,7 +56,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    private fun checkUserInformation() {
+    private fun hasUserInformation() {
         viewModelScope.launch {
             val isExist = userInformationService.existsUserInformation()
             _isExistUserInformation.postValue(isExist)
@@ -80,7 +81,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun setUserName() {
-        Timber.d("set user name!")
+        /**
+         * Todo: add "text validation"
+         */
+        Timber.d("set user name! %s", nameText.value.toString())
+        createUserInformation(nameText.value.toString())
         isCloseDialog.postValue(true)
     }
 

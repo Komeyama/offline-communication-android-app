@@ -35,6 +35,7 @@
             android:importantForAutofill="no"
             android:inputType="textPersonName"
             android:textAlignment="center"
+            android:text="@={viewModel.nameText}"
             app:layout_constraintTop_toBottomOf="@id/initial_note_message"
             app:layout_constraintStart_toEndOf="parent" />
 
