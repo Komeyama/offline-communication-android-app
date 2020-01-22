@@ -72,7 +72,7 @@ class CommunicableUserListFragment :Fragment(){
                 viewModelAdapter.activeUsers = lists
             }
         })
-        viewModel.requestResult.observe(this, Observer<RequestResult> {
+        viewModel.requestResult.observe(viewLifecycleOwner, Observer<RequestResult> {
             when(it) {
                 RequestResult.SUCCESS -> {
                     findNavController().navigate(
