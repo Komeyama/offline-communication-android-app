@@ -14,7 +14,7 @@ interface UserInformationDao {
     fun update(userInformationEntities: UserInformationEntities)
 
     @Query("SELECT * FROM user_information_entities ORDER BY databaseId DESC")
-    fun getUserInformation(): List<UserInformationEntities>
+    fun getUserInformation(): UserInformationEntities
 
     @Query("SELECT COUNT(*) FROM user_information_entities WHERE databaseId = 0")
     fun existsUserInformation(): Boolean

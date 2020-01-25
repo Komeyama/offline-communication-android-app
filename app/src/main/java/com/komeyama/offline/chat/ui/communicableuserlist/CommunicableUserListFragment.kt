@@ -77,7 +77,9 @@ class CommunicableUserListFragment :Fragment(){
                 RequestResult.SUCCESS -> {
                     findNavController().navigate(
                         CommunicableUserListFragmentDirections.
-                            actionCommunicableUserListFragmentToCommunicationFragment(communicationOpponentId = communicationOpponentInfo.id)
+                            actionCommunicableUserListFragmentToCommunicationFragment(
+                                communicationOpponentId = communicationOpponentInfo.id,
+                                communicationOpponentName = communicationOpponentInfo.name)
                     )
                 }
                 else -> {

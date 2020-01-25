@@ -21,6 +21,13 @@ fun Date.toDateString(): String{
     return SimpleDateFormat(dateFormatType).format(this)
 }
 
+fun userIdGenerator(): String {
+    return ('0'..'z').
+        filter { it != ':' }.
+        shuffled().subList(0, 10).
+        joinToString("")
+}
+
 enum class RequestResult{
     LOADING,
     SUCCESS,

@@ -3,6 +3,9 @@ package com.komeyama.offline.chat.ui
 import androidx.lifecycle.*
 import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationDao
+import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
+import com.komeyama.offline.chat.domain.CommunicationContent
+import com.komeyama.offline.chat.domain.asNearbyMessage
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicationRepository
@@ -10,6 +13,7 @@ import com.komeyama.offline.chat.service.UserInformationService
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -29,6 +33,7 @@ class MainViewModel @Inject constructor(
 
     val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
     val nameText: MutableLiveData<String> = MutableLiveData()
+    lateinit var currentUserInformation: UserInformationEntities
 
     init {
         hasUserInformation()
@@ -60,10 +65,14 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val isExist = userInformationService.existsUserInformation()
             _isExistUserInformation.postValue(isExist)
+
+            if (isExist) {
+                currentUserInformation = userInformationService.getUserInformation()
+            }
         }
     }
 
-    fun createUserInformation(userName: String) {
+    private fun createUserInformation(userName: String) {
         viewModelScope.launch {
             try {
                 userInformationService.insertUserInformation(userName)
@@ -75,7 +84,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val oldUserInformation = userInformationService.getUserInformation()
-                userInformationService.updateUserInformation(oldUserInformation[0].copy(userName = newUserName))
+                userInformationService.updateUserInformation(oldUserInformation.copy(userName = newUserName))
+                currentUserInformation = userInformationService.getUserInformation()
             } catch (error: IOException) {}
         }
     }
@@ -98,14 +108,36 @@ class MainViewModel @Inject constructor(
     }
 
     fun requestConnection(requestEndpointId: String) {
-        /**
-         * Todo: change "userIdAndName" to registered name and id
-         */
-        nearbyClient.requestConnection("userIdAndName", requestEndpointId)
+        nearbyClient.requestConnection(createUserIdAndName(), requestEndpointId)
     }
 
     fun startRefreshMessages() {
         communicationRepository.refreshMessages()
+    }
+
+    fun sendMessage(message: String, communicationOpponentId: String, communicationOpponentName: String) {
+        val communicationContent = createCommunicationContent(message,communicationOpponentId,communicationOpponentName)
+        viewModelScope.launch {
+            try {
+                communicationRepository.updateUserContent(communicationContent.asNearbyMessage())
+            } catch (error: IOException) {}
+        }
+        nearbyClient.sendPayload(communicationContent)
+    }
+
+    private fun createCommunicationContent(message: String, communicationOpponentId: String, communicationOpponentName: String): CommunicationContent {
+        return CommunicationContent(
+            currentUserInformation.userId,
+            currentUserInformation.userName,
+            communicationOpponentId,
+            communicationOpponentName,
+            Date(),
+            message
+        )
+    }
+
+    private fun createUserIdAndName(): String{
+        return currentUserInformation.userId + ":" + currentUserInformation.userName
     }
 
     override fun onCleared() {

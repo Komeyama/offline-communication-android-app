@@ -12,7 +12,6 @@ data class NearbyCommunicationContent(
     val receiveUserId:String,
     val receiveName:String,
     val sendTime: String,
-    val endpointId:String,
     val content:String)
 
 fun NearbyCommunicationContent.asDomainModel(): CommunicationContentsEntities {
@@ -23,6 +22,5 @@ fun NearbyCommunicationContent.asDomainModel(): CommunicationContentsEntities {
         receiveUserId,
         receiveName,
         sendTime,
-        endpointId,
         content)
 }

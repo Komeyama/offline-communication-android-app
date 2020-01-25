@@ -18,6 +18,8 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter
 import kotlinx.android.synthetic.main.fragment_communication.*
 import java.util.*
 import javax.inject.Inject
+import timber.log.Timber
+
 
 class CommunicationFragment : Fragment() {
 
@@ -25,6 +27,7 @@ class CommunicationFragment : Fragment() {
     lateinit var viewModelFactory: MainViewModelFactory
     lateinit var viewModel: MainViewModel
     private var communicationOpponentId = ""
+    private var communicationOpponentName = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +36,8 @@ class CommunicationFragment : Fragment() {
     ): View? {
         val args = CommunicationFragmentArgs.fromBundle(arguments!!)
         communicationOpponentId = args.communicationOpponentId
+        communicationOpponentName = args.communicationOpponentName
+
         (activity?.application as MainApplication).appComponent.injectionToCommunicationFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
@@ -43,10 +48,7 @@ class CommunicationFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel.startRefreshMessages()
 
-        /**
-         * todo: change 'senderId'(myself)
-         */
-        val adapter = MessagesListAdapter<Message>("myself", null)
+        val adapter = MessagesListAdapter<Message>(viewModel.currentUserInformation.userId, null)
         messagesList.setAdapter(adapter)
 
         var oldListSize = 0
@@ -67,6 +69,14 @@ class CommunicationFragment : Fragment() {
                 oldListSize = list.size
             }
         })
+
+        input.setInputListener {
+            viewModel.sendMessage(
+                it.toString(),
+                communicationOpponentId,
+                communicationOpponentName)
+            true
+        }
 
     }
 }

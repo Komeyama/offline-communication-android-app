@@ -109,7 +109,7 @@ class NearbyClientTest {
         createReceiveNearbyCommunicationContent.isAccessible = true
         assertEquals(
             createReceiveNearbyCommunicationContent.invoke(nearbyClient, payload),
-            communicationContent.asNearbyMessage("endpointId")
+            communicationContent.asNearbyMessage()
         )
     }
 

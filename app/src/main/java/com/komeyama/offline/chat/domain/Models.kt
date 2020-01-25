@@ -15,14 +15,13 @@ data class CommunicationContent(val sendUserId:String,
                                 val sendTime: Date,
                                 val content:String)
 
-fun CommunicationContent.asNearbyMessage(endPointId: String): NearbyCommunicationContent {
+fun CommunicationContent.asNearbyMessage(): NearbyCommunicationContent {
     return NearbyCommunicationContent(
         sendUserId,
         sendUserName,
         receiveUserId,
         receiveName,
         sendTime.toDateString(),
-        endPointId,
         content)
 }
 

@@ -13,7 +13,7 @@ object UserInformationDaoTest : UserInformationDao{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getUserInformation(): List<UserInformationEntities> {
+    override fun getUserInformation(): UserInformationEntities {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

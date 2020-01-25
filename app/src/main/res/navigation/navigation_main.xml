@@ -53,6 +53,10 @@
             android:name="communicationOpponentId"
             app:argType="string"
             android:defaultValue="default" />
+        <argument
+            android:name="communicationOpponentName"
+            app:argType="string"
+            android:defaultValue="default" />
     </fragment>
 
     <dialog

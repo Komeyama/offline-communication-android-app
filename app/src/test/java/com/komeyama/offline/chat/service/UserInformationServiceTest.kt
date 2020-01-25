@@ -36,7 +36,7 @@ class UserInformationServiceTest {
         if (!userInformationService.existsUserInformation()) {
             userInformationService.insertUserInformation("dummyName")
         }
-        assertEquals(userInformationService.getUserInformation()[0].userName,"dummyName")
+        assertEquals(userInformationService.getUserInformation().userName,"dummyName")
     }
 
     @Test
@@ -45,12 +45,12 @@ class UserInformationServiceTest {
         if (!userInformationService.existsUserInformation()) {
             userInformationService.insertUserInformation("dummyName")
             val oldUserInformation = userInformationService.getUserInformation()
-            userId = oldUserInformation[0].userId
-            userInformationService.updateUserInformation(oldUserInformation[0].copy(userName = "newDummyName"))
+            userId = oldUserInformation.userId
+            userInformationService.updateUserInformation(oldUserInformation.copy(userName = "newDummyName"))
         }
-        assertEquals(userInformationService.getUserInformation()[0].databaseId, 0)
-        assertEquals(userInformationService.getUserInformation()[0].userId, userId)
-        assertEquals(userInformationService.getUserInformation()[0].userName,"newDummyName")
+        assertEquals(userInformationService.getUserInformation().databaseId, 0)
+        assertEquals(userInformationService.getUserInformation().userId, userId)
+        assertEquals(userInformationService.getUserInformation().userName,"newDummyName")
     }
 
 

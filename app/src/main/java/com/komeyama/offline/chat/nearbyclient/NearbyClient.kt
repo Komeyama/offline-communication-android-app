@@ -185,7 +185,7 @@ class NearbyClient @Inject constructor(
     }
 
     private fun createSendPayload(communicationContent: CommunicationContent, endpointId: String): Payload {
-        val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).toJson(communicationContent.asNearbyMessage(endpointId))
+        val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).toJson(communicationContent.asNearbyMessage())
         return Payload.fromBytes(sendMessage.toString().toByteArray(StandardCharsets.UTF_8))
     }
 

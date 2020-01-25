@@ -9,6 +9,8 @@ import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.nearbyclient.asDomainModel
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CommunicationRepository @Inject constructor(
@@ -18,6 +20,10 @@ class CommunicationRepository @Inject constructor(
 
     val communicationContents: LiveData<List<NearbyCommunicationContent>> = Transformations.map(dao.getAllCommunicationList()){
         it.asDomainModels()
+    }
+
+    suspend fun updateUserContent(nearbyCommunicationContent:NearbyCommunicationContent) = withContext(Dispatchers.IO) {
+        dao.insert(nearbyCommunicationContent.asDomainModel())
     }
 
     @SuppressLint("CheckResult")
