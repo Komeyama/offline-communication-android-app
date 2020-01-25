@@ -17,8 +17,6 @@ import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val communicationContentsDao: CommunicationContentsDao,
-    private val userInformationDao: UserInformationDao,
     private val userInformationService: UserInformationService,
     private val communicationRepository: CommunicationRepository,
     private val nearbyClient: NearbyClient
