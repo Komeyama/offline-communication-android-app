@@ -15,6 +15,7 @@ import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.databinding.ActivityMainBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.nearbyclient.ConnectionType
 import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragmentDirections
 import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragmentDirections
 import com.komeyama.offline.chat.ui.setting.SettingFragmentDirections
@@ -56,21 +57,24 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
-        // If necessary display initial setting dialog.
+        startNearbyClientWithPermissionCheck()
+
+    }
+
+    @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+    fun startNearbyClient() {
         viewModel.isExistUserInformation.observe(this, Observer<Boolean>{
             if (!it) {
                 navController.navigate(CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToInitialSettingDialog())
             }
         })
-
-        startNearbyClientWithPermissionCheck()
-    }
-
-    @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
-    fun startNearbyClient() {
-        viewModel.startNearbyClient()
-        viewModel.invitedInfo.observe(this, Observer<ActiveUser> { user ->
-            currentFragmentToConfirmAcceptanceDialog(user)
+        viewModel.invitedInfo.observe(this, Observer<Iterable<*>> {
+            Timber.d("invitedInfo: %s",it)
+            val user:ActiveUser = it.filterIsInstance<ActiveUser>()[0]
+            val type = it.filterIsInstance<ConnectionType>()[0]
+            if (type == ConnectionType.RECEIVER) {
+                currentFragmentToConfirmAcceptanceDialog(user)
+            }
         })
     }
 

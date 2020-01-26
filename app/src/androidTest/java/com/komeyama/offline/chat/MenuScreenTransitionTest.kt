@@ -23,6 +23,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.komeyama.offline.chat.nearbyclient.ConnectionType
 import com.komeyama.offline.chat.util.RequestResult
 import org.junit.After
 import org.junit.Rule
@@ -44,7 +45,7 @@ class MenuScreenTransitionTest {
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
     private lateinit var bottomNavigationView: BottomNavigationView
-    private lateinit var invitedEndpointInfo: MutableLiveData<ActiveUser>
+    private lateinit var invitedEndpointInfo: MutableLiveData<Iterable<*>>
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
     private lateinit var requestResult: MutableLiveData<RequestResult>
 
@@ -63,7 +64,7 @@ class MenuScreenTransitionTest {
 
         val invitedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_inviteEndpointInfo")
         invitedEndpointInfoFiled.isAccessible = true
-        invitedEndpointInfo = invitedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<ActiveUser>
+        invitedEndpointInfo = invitedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<Iterable<*>>
 
         val requestedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_requestResult")
         requestedEndpointInfoFiled.isAccessible = true
@@ -75,7 +76,7 @@ class MenuScreenTransitionTest {
         val settingFragmentId = bottomNavigationView.menu.findItem(R.id.SettingFragment).itemId
         onView(withId(settingFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
         waitNextProcess(2)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
@@ -84,7 +85,7 @@ class MenuScreenTransitionTest {
         val communicationHistoryListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicationHistoryListFragment).itemId
         onView(withId(communicationHistoryListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
         waitNextProcess(2)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
@@ -93,7 +94,7 @@ class MenuScreenTransitionTest {
         val communicableUserListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicableUserListFragment).itemId
         onView(withId(communicableUserListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        invitedEndpointInfo.postValue(ActiveUser("12345a", "nearby test0", "dummy0"))
+        invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
         waitNextProcess(2)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
@@ -117,12 +118,6 @@ class MenuScreenTransitionTest {
         waitNextProcess(1)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(3)
-        onView(withId(R.id.recycler_view))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-        onView(withId(R.id.recycler_view))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
-        onView(withId(R.id.recycler_view))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(2, click()))
         requestResult.postValue(RequestResult.SUCCESS)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)

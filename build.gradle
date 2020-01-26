@@ -8,6 +8,7 @@ buildscript {
             'dagger_version' : "2.25.4",
             'room_version' : '2.2.3',
             'rxjava2_version' : '2.2.16',
+            'rxjava2_android_version' : '2.1.1',
             'permission_version' : '4.1.0',
             'moshi_version' : '1.9.2',
             'mockito_version' : '3.2.4',

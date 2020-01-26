@@ -35,7 +35,12 @@ class ConfirmAcceptanceDialog : DialogFragment() {
             .setPositiveButton(R.string.confirm_acceptance_dialog_ok) { _, _ ->
                 Timber.d("dialog fragment ok")
                 viewModel.acceptConnection(args.endPointId)
-                findNavController().navigate(R.id.action_ConfirmAcceptanceDialog_to_CommunicationFragment)
+                findNavController().navigate(
+                    ConfirmAcceptanceDialogDirections.actionConfirmAcceptanceDialogToCommunicationFragment(
+                        communicationOpponentId = args.id,
+                        communicationOpponentName = args.userName
+                    )
+                )
             }
             .create()
     }

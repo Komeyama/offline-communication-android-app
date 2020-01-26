@@ -1,8 +1,6 @@
 package com.komeyama.offline.chat.ui
 
 import androidx.lifecycle.*
-import com.komeyama.offline.chat.database.communication.CommunicationContentsDao
-import com.komeyama.offline.chat.database.userinfo.UserInformationDao
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
@@ -10,7 +8,9 @@ import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.IOException
 import java.util.*
@@ -50,13 +50,16 @@ class MainViewModel @Inject constructor(
             return@switchMap selectedContents
         }
 
-    fun startNearbyClient() {
-        Timber.d("start nearby client")
-        /**
-         * Todo: change "userIdAndName" to registered name and id
-         */
-        nearbyClient.startNearbyClient("")
+    private suspend fun startNearbyClient() {
+        withContext(Dispatchers.IO) {
+            nearbyClient.startNearbyClient(createUserIdAndName())
+        }
+    }
 
+    private suspend fun stopNearbyClient() {
+        withContext(Dispatchers.IO) {
+            nearbyClient.stopNearbyClient()
+        }
     }
 
     private fun hasUserInformation() {
@@ -66,6 +69,7 @@ class MainViewModel @Inject constructor(
 
             if (isExist) {
                 currentUserInformation = userInformationService.getUserInformation()
+                startNearbyClient()
             }
         }
     }
@@ -74,6 +78,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 userInformationService.insertUserInformation(userName)
+                currentUserInformation = userInformationService.getUserInformation()
+                startNearbyClient()
             } catch (error: IOException) {}
         }
     }
@@ -84,6 +90,8 @@ class MainViewModel @Inject constructor(
                 val oldUserInformation = userInformationService.getUserInformation()
                 userInformationService.updateUserInformation(oldUserInformation.copy(userName = newUserName))
                 currentUserInformation = userInformationService.getUserInformation()
+                stopNearbyClient()
+                startNearbyClient()
             } catch (error: IOException) {}
         }
     }

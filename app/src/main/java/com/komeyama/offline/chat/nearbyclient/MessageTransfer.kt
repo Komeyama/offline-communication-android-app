@@ -1,9 +1,7 @@
 package com.komeyama.offline.chat.nearbyclient
 
 import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
-import com.komeyama.offline.chat.util.toDateString
 import com.squareup.moshi.JsonClass
-import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class NearbyCommunicationContent(

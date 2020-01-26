@@ -18,39 +18,38 @@ import timber.log.Timber
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
+enum class ConnectionType{
+    REQUESTER,
+    RECEIVER
+}
+
 class NearbyClient @Inject constructor(
     val application: Application,
     val moshi: Moshi
 ) {
-
+    private val nearbyStrategy = P2P_POINT_TO_POINT
+    private var connectionType: ConnectionType = ConnectionType.RECEIVER
+    private var currentUserIdAndName:String = ""
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
-
     private var connectedEndpointId: String = ""
-    private val currentActiveUsrList: MutableList<ActiveUser> = mutableListOf()
-
+    private val currentActiveUsrSet: MutableSet<ActiveUser> = mutableSetOf()
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
     val aroundEndpointInfo: LiveData<List<ActiveUser>>
         get() = _aroundEndpointInfo
-
-    private val _lostEndpointId: PublishProcessor<String> = PublishProcessor.create()
-    val lostEndpointId: PublishProcessor<String>
-        get() = _lostEndpointId
-
-    private val _inviteEndpointInfo: MutableLiveData<ActiveUser> = MutableLiveData()
-    val inviteEndpointInfo: LiveData<ActiveUser>
+    private val _inviteEndpointInfo: MutableLiveData<Iterable<*>> = MutableLiveData()
+    val inviteEndpointInfo: LiveData<Iterable<*>>
         get() = _inviteEndpointInfo
-
     private val _receiveContent: PublishProcessor<NearbyCommunicationContent> = PublishProcessor.create()
     val receiveContent: PublishProcessor<NearbyCommunicationContent>
         get() = _receiveContent
-
     private val _requestResult: MutableLiveData<RequestResult> = MutableLiveData()
     val requestResult: LiveData<RequestResult>
         get() = _requestResult
 
     fun startNearbyClient(userIdAndName: String) {
-        startAdvertising(userIdAndName)
+        currentUserIdAndName = userIdAndName
+        startAdvertising(currentUserIdAndName)
         startDiscovery()
     }
 
@@ -58,6 +57,14 @@ class NearbyClient @Inject constructor(
         /**
          * Todo: add nearby stop process
          */
+        connectionsClient.stopAdvertising()
+        connectionsClient.stopDiscovery()
+    }
+
+    private fun reStartNearbyClient() {
+        connectionType = ConnectionType.RECEIVER
+        stopNearbyClient()
+        startNearbyClient(currentUserIdAndName)
     }
 
     fun acceptConnection(acceptEndpointId: String) {
@@ -72,14 +79,19 @@ class NearbyClient @Inject constructor(
     }
 
     fun requestConnection(userIdAndName: String, requestEndpointId: String) {
+        connectionType = ConnectionType.REQUESTER
         _requestResult.postValue(RequestResult.LOADING)
         connectionsClient.requestConnection(userIdAndName, requestEndpointId, connectionLifecycleCallback).
             addOnSuccessListener {
-                Timber.d("success requestConnection!")
+                Timber.d("success requestConnection! :%s", requestEndpointId)
+                connectionsClient.acceptConnection(requestEndpointId, payloadCallback)
+                _requestResult.postValue(RequestResult.SUCCESS)
             }.addOnFailureListener {
                 Timber.d("failure requestConnection!")
+                _requestResult.postValue(RequestResult.CANCELED)
+                reStartNearbyClient()
             /**
-             * Todo: Add retry process
+             * Todo: Add failure message trigger
              */
         }
     }
@@ -90,12 +102,13 @@ class NearbyClient @Inject constructor(
     }
 
     fun sendPayload(communicationContent: CommunicationContent) {
-        val payLoad = createSendPayload(communicationContent, connectedEndpointId)
+        val payLoad = createSendPayload(communicationContent)
+        Timber.d("sendPayload endpointid %s",connectedEndpointId)
         connectionsClient.sendPayload(connectedEndpointId, payLoad)
     }
 
     private fun startAdvertising(userIdAndName: String) {
-        val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder().setStrategy(P2P_POINT_TO_POINT).build()
+        val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder().setStrategy(nearbyStrategy).build()
         connectionsClient.startAdvertising(
             userIdAndName,
             serviceId,
@@ -112,7 +125,7 @@ class NearbyClient @Inject constructor(
     }
 
     private fun startDiscovery() {
-        val discoveryOptions: DiscoveryOptions = DiscoveryOptions.Builder().setStrategy(P2P_POINT_TO_POINT).build()
+        val discoveryOptions: DiscoveryOptions = DiscoveryOptions.Builder().setStrategy(nearbyStrategy).build()
         connectionsClient.startDiscovery(
             serviceId,
             endpointDiscoveryCallback,
@@ -129,16 +142,20 @@ class NearbyClient @Inject constructor(
 
     private val connectionLifecycleCallback = object: ConnectionLifecycleCallback() {
         override fun onConnectionInitiated(endpointId: String, connectionInfo: ConnectionInfo) {
-            _inviteEndpointInfo.postValue(
+            Timber.d("onConnectionInitiated: %s", connectionInfo)
+            connectedEndpointId = endpointId
+            val list:Iterable<*> = listOf(
                 ActiveUser(
                     connectionInfo.endpointName.splitUserIdAndName().userId,
                     connectionInfo.endpointName.splitUserIdAndName().userName,
                     endpointId
-                )
-            )
+                ),
+                connectionType)
+            _inviteEndpointInfo.postValue(list)
         }
 
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
+            Timber.d("connection result: %s", result.status)
             when(result.status) {
                 Status.RESULT_SUCCESS -> {
                     connectedEndpointId = endpointId
@@ -153,38 +170,55 @@ class NearbyClient @Inject constructor(
             }
         }
 
-        override fun onDisconnected(endpointId: String) {}
+        override fun onDisconnected(endpointId: String) {
+            Timber.d("onDisconnected: %s", endpointId)
+        }
     }
 
     private val endpointDiscoveryCallback = object: EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
-            currentActiveUsrList.remove(
+            Timber.d("info: %s", info)
+            currentActiveUsrSet.add(
                 ActiveUser(
                     info.endpointName.splitUserIdAndName().userId,
                     info.endpointName.splitUserIdAndName().userName,
                     endpointId)
             )
-            _aroundEndpointInfo.postValue(currentActiveUsrList)
+            _aroundEndpointInfo.postValue(currentActiveUsrSet.toList())
         }
 
         override fun onEndpointLost(endpointId: String) {
-            _lostEndpointId.onNext(endpointId)
+            Timber.d("onEndpointLost: %s", endpointId)
+            var lostUserId = ""
+            var lostUserName = ""
+            currentActiveUsrSet.forEach{
+                if (it.endPointId.equals(endpointId)) {
+                    lostUserId = it.id
+                    lostUserName = it.name
+                }
+            }
+            currentActiveUsrSet.remove(ActiveUser(lostUserId,lostUserName,endpointId))
+            _aroundEndpointInfo.postValue(currentActiveUsrSet.toList())
         }
     }
 
     private val payloadCallback = object: PayloadCallback() {
         override fun onPayloadReceived(endpointId: String, payload: Payload) {
+            Timber.d("onPayloadReceived: %s", endpointId)
             val receiveNearbyCommunicationContent = createReceiveNearbyCommunicationContent(payload)
             receiveNearbyCommunicationContent?.let {
                 _receiveContent.onNext(it)
             }
         }
 
-        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {}
+        override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
+            Timber.d("onPayloadTransferUpdate: %s", endpointId)
+            connectedEndpointId = endpointId
+        }
 
     }
 
-    private fun createSendPayload(communicationContent: CommunicationContent, endpointId: String): Payload {
+    private fun createSendPayload(communicationContent: CommunicationContent): Payload {
         val sendMessage = moshi.adapter(NearbyCommunicationContent::class.java).toJson(communicationContent.asNearbyMessage())
         return Payload.fromBytes(sendMessage.toString().toByteArray(StandardCharsets.UTF_8))
     }
