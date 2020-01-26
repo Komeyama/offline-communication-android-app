@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.communicationhistorylist
+package com.komeyama.offline.chat.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.ui.MainViewModel
 import javax.inject.Inject
 
-class CommunicationHistoryListFragment :Fragment(){
+class SettingFragment :Fragment(){
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -23,9 +23,9 @@ class CommunicationHistoryListFragment :Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_history, container, false)
+        val view = inflater.inflate(R.layout.fragment_setting, container, false)
 
-        (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
+        (activity?.application as MainApplication).appComponent.injectionToSettingFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
         return view

@@ -24,7 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.komeyama.offline.chat.nearbyclient.ConnectionType
-import com.komeyama.offline.chat.util.RequestResult
+import com.komeyama.offline.chat.nearbyclient.RequestResult
 import org.junit.After
 import org.junit.Rule
 import java.util.concurrent.TimeUnit

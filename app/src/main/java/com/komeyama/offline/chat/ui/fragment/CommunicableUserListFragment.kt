@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.communicableuserlist
+package com.komeyama.offline.chat.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,8 +18,8 @@ import com.komeyama.offline.chat.databinding.ActiveUserItemBinding
 import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.nearbyclient.RequestResult
 import com.komeyama.offline.chat.ui.MainViewModel
-import com.komeyama.offline.chat.util.RequestResult
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -45,17 +45,22 @@ class CommunicableUserListFragment :Fragment(){
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModelAdapter = CommunicableUserListAdapter(ActiveUserClick {
-            communicationOpponentInfo = CommunicationOpponentInfo(it.id, it.name, it.endPointId)
-            findNavController().navigate(
-                CommunicableUserListFragmentDirections.
-                    actionCommunicableUserListFragmentToConfirmRequestDialog(
+        viewModelAdapter =
+            CommunicableUserListAdapter(ActiveUserClick {
+                communicationOpponentInfo =
+                    CommunicationOpponentInfo(
+                        it.id,
+                        it.name,
+                        it.endPointId
+                    )
+                findNavController().navigate(
+                    CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToConfirmRequestDialog(
                         id = it.id,
                         userName = it.name,
                         endPointId = it.endPointId
                     )
-            )
-        })
+                )
+            })
 
         binding.recyclerView.findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = LinearLayoutManager(context)
@@ -76,10 +81,10 @@ class CommunicableUserListFragment :Fragment(){
             when(it) {
                 RequestResult.SUCCESS -> {
                     findNavController().navigate(
-                        CommunicableUserListFragmentDirections.
-                            actionCommunicableUserListFragmentToCommunicationFragment(
-                                communicationOpponentId = communicationOpponentInfo.id,
-                                communicationOpponentName = communicationOpponentInfo.name)
+                        CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToCommunicationFragment(
+                            communicationOpponentId = communicationOpponentInfo.id,
+                            communicationOpponentName = communicationOpponentInfo.name
+                        )
                     )
                 }
                 else -> {

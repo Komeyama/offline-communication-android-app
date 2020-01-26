@@ -10,7 +10,6 @@ import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
-import com.komeyama.offline.chat.util.RequestResult
 import com.komeyama.offline.chat.util.splitUserIdAndName
 import com.squareup.moshi.Moshi
 import io.reactivex.processors.PublishProcessor
@@ -21,6 +20,19 @@ import javax.inject.Inject
 enum class ConnectionType{
     REQUESTER,
     RECEIVER
+}
+
+enum class RequestResult{
+    UNREQUEST,
+    LOADING,
+    SUCCESS,
+    CANCELED,
+    INTERRUPTED
+}
+
+enum class ConnectingStatus{
+    CONNECTING,
+    LOST
 }
 
 class NearbyClient @Inject constructor(
@@ -46,6 +58,9 @@ class NearbyClient @Inject constructor(
     private val _requestResult: MutableLiveData<RequestResult> = MutableLiveData()
     val requestResult: LiveData<RequestResult>
         get() = _requestResult
+    private val _connectingStatus:  MutableLiveData<ConnectingStatus> = MutableLiveData()
+    val connectingStatus: LiveData<ConnectingStatus>
+            get() = _connectingStatus
 
     fun startNearbyClient(userIdAndName: String) {
         currentUserIdAndName = userIdAndName
@@ -69,6 +84,7 @@ class NearbyClient @Inject constructor(
 
     fun acceptConnection(acceptEndpointId: String) {
         Timber.d("acceptConnection: %s", acceptEndpointId)
+        _connectingStatus.postValue(ConnectingStatus.CONNECTING)
         connectedEndpointId = acceptEndpointId
         connectionsClient.acceptConnection(acceptEndpointId, payloadCallback)
     }
@@ -86,6 +102,7 @@ class NearbyClient @Inject constructor(
                 Timber.d("success requestConnection! :%s", requestEndpointId)
                 connectionsClient.acceptConnection(requestEndpointId, payloadCallback)
                 _requestResult.postValue(RequestResult.SUCCESS)
+                _connectingStatus.postValue(ConnectingStatus.CONNECTING)
             }.addOnFailureListener {
                 Timber.d("failure requestConnection!")
                 _requestResult.postValue(RequestResult.CANCELED)
@@ -159,7 +176,6 @@ class NearbyClient @Inject constructor(
             when(result.status) {
                 Status.RESULT_SUCCESS -> {
                     connectedEndpointId = endpointId
-                    _requestResult.postValue(RequestResult.SUCCESS)
                 }
                 Status.RESULT_CANCELED -> {
                     _requestResult.postValue(RequestResult.CANCELED)
@@ -172,6 +188,9 @@ class NearbyClient @Inject constructor(
 
         override fun onDisconnected(endpointId: String) {
             Timber.d("onDisconnected: %s", endpointId)
+            _requestResult.postValue(RequestResult.UNREQUEST)
+            _connectingStatus.postValue(ConnectingStatus.LOST)
+            reStartNearbyClient()
         }
     }
 

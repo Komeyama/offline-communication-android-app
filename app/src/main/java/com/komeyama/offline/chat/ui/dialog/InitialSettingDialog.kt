@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui
+package com.komeyama.offline.chat.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
@@ -14,6 +14,7 @@ import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.databinding.FragmentInitialBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
+import com.komeyama.offline.chat.ui.MainViewModel
 import javax.inject.Inject
 
 class InitialSettingDialog : DialogFragment(){

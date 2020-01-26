@@ -1,4 +1,4 @@
-package com.komeyama.offline.chat.ui.communication
+package com.komeyama.offline.chat.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
+import com.komeyama.offline.chat.nearbyclient.ConnectingStatus
 import com.komeyama.offline.chat.ui.MainViewModel
 import com.komeyama.offline.chat.util.toDate
 import com.stfalcon.chatkit.commons.models.IMessage
@@ -34,7 +36,10 @@ class CommunicationFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val args = CommunicationFragmentArgs.fromBundle(arguments!!)
+        val args =
+            CommunicationFragmentArgs.fromBundle(
+                arguments!!
+            )
         communicationOpponentId = args.communicationOpponentId
         communicationOpponentName = args.communicationOpponentName
 
@@ -60,9 +65,14 @@ class CommunicationFragment : Fragment() {
                         adapter.addToStart(
                             Message(
                                 index.toString(),
-                                Author(value.sendUserId, value.sendUserName,""),
+                                Author(
+                                    value.sendUserId,
+                                    value.sendUserName,
+                                    ""
+                                ),
                                 value.sendTime.toDate(),
-                                value.content),true
+                                value.content
+                            ),true
                         )
                     }
                 }
@@ -74,9 +84,17 @@ class CommunicationFragment : Fragment() {
             viewModel.sendMessage(
                 it.toString(),
                 communicationOpponentId,
-                communicationOpponentName)
+                communicationOpponentName
+            )
             true
         }
+
+        viewModel.connectingStatus.observe(viewLifecycleOwner, Observer {
+            Timber.d("connectingStatus:%s", it)
+            if (it == ConnectingStatus.LOST) {
+                findNavController().navigate(R.id.action_CommunicationFragment_to_disconnectedMessageDialog)
+            }
+        })
 
     }
 }

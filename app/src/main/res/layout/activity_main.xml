@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View"/>
-        <import type="com.komeyama.offline.chat.util.RequestResult"/>
+        <import type="com.komeyama.offline.chat.nearbyclient.RequestResult"/>
 
         <variable
             name="viewModel"

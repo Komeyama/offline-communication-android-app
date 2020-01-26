@@ -14,10 +14,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.nearbyclient.ConnectingStatus
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
+import com.komeyama.offline.chat.nearbyclient.RequestResult
 import com.komeyama.offline.chat.ui.MainActivity
-import com.komeyama.offline.chat.util.RequestResult
 import com.komeyama.offline.chat.util.toDateString
 import org.junit.After
 import org.junit.Before
@@ -43,6 +44,7 @@ class CommunicationScreenTest {
     @Inject lateinit var nearbyClient: NearbyClient
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
     private lateinit var requestResult: MutableLiveData<RequestResult>
+    private lateinit var connectingStatus: MutableLiveData<ConnectingStatus>
 
     @Before
     fun setUp() {
@@ -55,9 +57,13 @@ class CommunicationScreenTest {
         aroundEndpointInfoFiled.isAccessible = true
         aroundEndpointInfo = aroundEndpointInfoFiled.get(nearbyClient) as MutableLiveData<List<ActiveUser>>
 
-        val requestedEndpointInfoFiled = NearbyClient::class.java.getDeclaredField("_requestResult")
-        requestedEndpointInfoFiled.isAccessible = true
-        requestResult = requestedEndpointInfoFiled.get(nearbyClient) as MutableLiveData<RequestResult>
+        val requestedResultFiled = NearbyClient::class.java.getDeclaredField("_requestResult")
+        requestedResultFiled.isAccessible = true
+        requestResult = requestedResultFiled.get(nearbyClient) as MutableLiveData<RequestResult>
+
+        val connectingStatusFiled = NearbyClient::class.java.getDeclaredField("_connectingStatus")
+        connectingStatusFiled.isAccessible = true
+        connectingStatus = connectingStatusFiled.get(nearbyClient) as MutableLiveData<ConnectingStatus>
 
         ActivityScenario.launch(MainActivity::class.java)
     }
@@ -84,17 +90,26 @@ class CommunicationScreenTest {
                 ))
         waitNextProcess(1)
         Espresso.onView(ViewMatchers.withId(android.R.id.button1)).perform(ViewActions.click())
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         requestResult.postValue(RequestResult.SUCCESS)
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        requestResult.postValue(RequestResult.UNREQUEST)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
         nearbyClient.receiveContent.onNext(
             NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "Hello")
         )
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
         nearbyClient.receiveContent.onNext(
             NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date().toDateString(),  "Hello!")
         )
-        waitNextProcess(10)
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(3)
+        connectingStatus.postValue(ConnectingStatus.LOST)
+        Espresso.onView(ViewMatchers.withId(android.R.id.button1)).perform(ViewActions.click())
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(5)
     }
 
     @After

@@ -9,6 +9,7 @@
     <string name="confirm_request_dialog_message">Do you want to call</string>
     <string name="confirm_request_dialog_ok">Yes</string>
     <string name="confirm_request_dialog_ng">No</string>
+    <string name="disconnected_message_dialog_message">Lost connection with opponent device!</string>
     <string name="initial_note">Please enter your name on this form.\n※You can change it later</string>
     <string name="initial_hint">your name</string>
     <string name="initial_ok">OK</string>

@@ -27,10 +27,3 @@ fun userIdGenerator(): String {
         shuffled().subList(0, 10).
         joinToString("")
 }
-
-enum class RequestResult{
-    LOADING,
-    SUCCESS,
-    CANCELED,
-    INTERRUPTED
-}

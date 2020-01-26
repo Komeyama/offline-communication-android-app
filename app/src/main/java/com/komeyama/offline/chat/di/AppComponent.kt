@@ -1,14 +1,14 @@
 package com.komeyama.offline.chat.di
 
 import android.app.Application
-import com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragment
-import com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragment
+import com.komeyama.offline.chat.ui.fragment.CommunicableUserListFragment
+import com.komeyama.offline.chat.ui.fragment.CommunicationHistoryListFragment
 import com.komeyama.offline.chat.ui.MainActivity
-import com.komeyama.offline.chat.ui.ConfirmAcceptanceDialog
-import com.komeyama.offline.chat.ui.ConfirmRequestDialog
-import com.komeyama.offline.chat.ui.InitialSettingDialog
-import com.komeyama.offline.chat.ui.communication.CommunicationFragment
-import com.komeyama.offline.chat.ui.setting.SettingFragment
+import com.komeyama.offline.chat.ui.dialog.ConfirmAcceptanceDialog
+import com.komeyama.offline.chat.ui.dialog.ConfirmRequestDialog
+import com.komeyama.offline.chat.ui.dialog.InitialSettingDialog
+import com.komeyama.offline.chat.ui.fragment.CommunicationFragment
+import com.komeyama.offline.chat.ui.fragment.SettingFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

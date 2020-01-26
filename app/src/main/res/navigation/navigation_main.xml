@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/CommunicableUserListFragment"
-        android:name="com.komeyama.offline.chat.ui.communicableuserlist.CommunicableUserListFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.CommunicableUserListFragment"
         android:label="CommunicableUserListFragment"
         tools:layout="@layout/fragment_communicable_user_list">
         <action
@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/CommunicationHistoryListFragment"
-        android:name="com.komeyama.offline.chat.ui.communicationhistorylist.CommunicationHistoryListFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.CommunicationHistoryListFragment"
         android:label="CommunicationHistoryListFragment"
         tools:layout="@layout/fragment_history">
         <action
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/SettingFragment"
-        android:name="com.komeyama.offline.chat.ui.setting.SettingFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_setting">
         <action
@@ -47,7 +47,7 @@
 
     <fragment
         android:id="@+id/CommunicationFragment"
-        android:name="com.komeyama.offline.chat.ui.communication.CommunicationFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.CommunicationFragment"
         android:label="CommunicationFragment" >
         <argument
             android:name="communicationOpponentId"
@@ -57,11 +57,14 @@
             android:name="communicationOpponentName"
             app:argType="string"
             android:defaultValue="default" />
+        <action
+            android:id="@+id/action_CommunicationFragment_to_disconnectedMessageDialog"
+            app:destination="@id/disconnectedMessageDialog" />
     </fragment>
 
     <dialog
         android:id="@+id/ConfirmAcceptanceDialog"
-        android:name="com.komeyama.offline.chat.ui.ConfirmAcceptanceDialog"
+        android:name="com.komeyama.offline.chat.ui.dialog.ConfirmAcceptanceDialog"
         android:label="ConfirmAcceptanceDialog">
         <action
             android:id="@+id/action_ConfirmAcceptanceDialog_to_CommunicationFragment"
@@ -82,7 +85,7 @@
     </dialog>
     <dialog
         android:id="@+id/ConfirmRequestDialog"
-        android:name="com.komeyama.offline.chat.ui.ConfirmRequestDialog"
+        android:name="com.komeyama.offline.chat.ui.dialog.ConfirmRequestDialog"
         android:label="ConfirmRequestDialog" >
         <argument
             android:name="endPointId"
@@ -99,7 +102,15 @@
     </dialog>
     <dialog
         android:id="@+id/initialSettingDialog"
-        android:name="com.komeyama.offline.chat.ui.InitialSettingDialog"
+        android:name="com.komeyama.offline.chat.ui.dialog.InitialSettingDialog"
         android:label="InitialSettingDialog" />
+    <dialog
+        android:id="@+id/disconnectedMessageDialog"
+        android:name="com.komeyama.offline.chat.ui.dialog.DisconnectedMessageDialog"
+        android:label="DisconnectedMessageDialog" >
+        <action
+            android:id="@+id/action_disconnectedMessageDialog_to_CommunicableUserListFragment"
+            app:destination="@id/CommunicableUserListFragment" />
+    </dialog>
 
 </navigation>

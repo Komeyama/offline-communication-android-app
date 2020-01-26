@@ -10,7 +10,7 @@
 
         <variable
             name="userListCallback"
-            type="com.komeyama.offline.chat.ui.communicableuserlist.ActiveUserClick" />
+            type="com.komeyama.offline.chat.ui.fragment.ActiveUserClick" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

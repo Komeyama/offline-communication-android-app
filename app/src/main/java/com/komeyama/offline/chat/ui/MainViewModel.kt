@@ -25,6 +25,7 @@ class MainViewModel @Inject constructor(
     val activeUserList = nearbyClient.aroundEndpointInfo
     val invitedInfo = nearbyClient.inviteEndpointInfo
     val requestResult = nearbyClient.requestResult
+    val connectingStatus = nearbyClient.connectingStatus
     private val _isExistUserInformation: MutableLiveData<Boolean> = MutableLiveData()
     val isExistUserInformation:LiveData<Boolean>
         get() = _isExistUserInformation
