@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             Timber.d("invitedInfo: %s",it)
             val user:ActiveUser = it.filterIsInstance<ActiveUser>()[0]
             val type = it.filterIsInstance<ConnectionType>()[0]
-            if (type == ConnectionType.RECEIVER) {
+            if (type == ConnectionType.RECEIVER && user.id != "" && user.name != "" && user.endPointId != "") {
                 currentFragmentToConfirmAcceptanceDialog(user)
             }
         })

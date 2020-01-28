@@ -183,9 +183,8 @@ class NearbyClient @Inject constructor(
 
         override fun onDisconnected(endpointId: String) {
             Timber.d("onDisconnected: %s", endpointId)
-            _requestResult.postValue(RequestResult.UNREQUEST)
             _connectingStatus.postValue(ConnectingStatus.LOST)
-            reStartNearbyClient()
+            resetCommunication()
         }
     }
 
@@ -240,6 +239,19 @@ class NearbyClient @Inject constructor(
     private fun createReceiveNearbyCommunicationContent(payload: Payload): NearbyCommunicationContent? {
         val receiveMessage = payload.asBytes()?.let { String(it) } ?: ""
         return moshi.adapter(NearbyCommunicationContent::class.java).fromJson(receiveMessage)
+    }
+
+    private fun resetCommunication() {
+        _requestResult.postValue(RequestResult.UNREQUEST)
+        val list:Iterable<*> = listOf(
+            ActiveUser(
+                "",
+                "",
+                ""
+            ),
+            connectionType)
+        _inviteEndpointInfo.postValue(list)
+        reStartNearbyClient()
     }
 
 }
