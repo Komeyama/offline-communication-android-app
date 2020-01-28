@@ -78,6 +78,7 @@ class CommunicableUserListFragment :Fragment(){
             }
         })
         viewModel.requestResult.observe(viewLifecycleOwner, Observer<RequestResult> {
+            Timber.d("request result: %s", it.toString())
             when(it) {
                 RequestResult.SUCCESS -> {
                     findNavController().navigate(
@@ -88,7 +89,7 @@ class CommunicableUserListFragment :Fragment(){
                     )
                 }
                 else -> {
-                    Timber.d("request result: %s", it.toString())
+                    Timber.d("request result else: %s", it.toString())
                 }
             }
         })

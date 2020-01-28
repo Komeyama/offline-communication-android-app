@@ -113,11 +113,6 @@ class NearbyClient @Inject constructor(
         }
     }
 
-    fun stopReceivePublish(){
-        _receiveContent.onComplete()
-        receiveContent.onComplete()
-    }
-
     fun sendPayload(communicationContent: CommunicationContent) {
         val payLoad = createSendPayload(communicationContent)
         Timber.d("sendPayload endpointid %s",connectedEndpointId)

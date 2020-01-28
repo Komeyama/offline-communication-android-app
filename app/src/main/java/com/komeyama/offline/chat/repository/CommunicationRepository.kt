@@ -9,6 +9,7 @@ import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.nearbyclient.asDomainModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,6 +24,7 @@ class CommunicationRepository @Inject constructor(
     val communicationContents: LiveData<List<NearbyCommunicationContent>> = Transformations.map(dao.getAllCommunicationList()){
         it.asDomainModels()
     }
+    lateinit var disposable:Disposable
 
     suspend fun updateUserContent(nearbyCommunicationContent:NearbyCommunicationContent) = withContext(Dispatchers.IO) {
         dao.insert(nearbyCommunicationContent.asDomainModel())
@@ -30,7 +32,7 @@ class CommunicationRepository @Inject constructor(
 
     @SuppressLint("CheckResult")
     fun refreshMessages() {
-        nearbyClient.
+        disposable = nearbyClient.
             receiveContent.
             observeOn(Schedulers.io()).
             subscribeOn(AndroidSchedulers.mainThread()).
@@ -40,8 +42,8 @@ class CommunicationRepository @Inject constructor(
             }
     }
 
-    fun stopReciveMessages() {
-        nearbyClient.stopReceivePublish()
+    fun stopRefreshMessages() {
+        disposable.dispose()
     }
 
 }

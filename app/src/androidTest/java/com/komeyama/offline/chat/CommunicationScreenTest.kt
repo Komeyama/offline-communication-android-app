@@ -101,8 +101,29 @@ class CommunicationScreenTest {
         )
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
+
+
         nearbyClient.receiveContent.onNext(
-            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date().toDateString(),  "Hello!")
+            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "Hello!")
+        )
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(3)
+
+        nearbyClient.receiveContent.onNext(
+            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "Hello!!")
+        )
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(3)
+
+        nearbyClient.receiveContent.onNext(
+            NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "Hello!!!")
+        )
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        waitNextProcess(3)
+
+
+        nearbyClient.receiveContent.onNext(
+            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date().toDateString(),  "Hello_!")
         )
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)

@@ -49,6 +49,11 @@ class CommunicationFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_communication, container, false)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.stopRefreshMessages()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel.startRefreshMessages()

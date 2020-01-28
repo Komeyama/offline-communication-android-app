@@ -63,6 +63,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
+
     private fun hasUserInformation() {
         viewModelScope.launch {
             val isExist = userInformationService.existsUserInformation()
@@ -120,6 +121,10 @@ class MainViewModel @Inject constructor(
 
     fun startRefreshMessages() {
         communicationRepository.refreshMessages()
+    }
+
+    fun stopRefreshMessages(){
+        communicationRepository.stopRefreshMessages()
     }
 
     fun sendMessage(message: String, communicationOpponentId: String, communicationOpponentName: String) {
