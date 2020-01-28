@@ -8,7 +8,6 @@ import com.komeyama.offline.chat.database.communication.asDomainModels
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.nearbyclient.asDomainModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +34,6 @@ class CommunicationRepository @Inject constructor(
         disposable = nearbyClient.
             receiveContent.
             observeOn(Schedulers.io()).
-            subscribeOn(AndroidSchedulers.mainThread()).
             subscribe {
                 Timber.d("receive message: %s", it.content)
                 dao.insert(it.asDomainModel())
