@@ -3,6 +3,7 @@ package com.komeyama.offline.chat.ui
 import androidx.lifecycle.*
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
+import com.komeyama.offline.chat.domain.HistoryUser
 import com.komeyama.offline.chat.domain.asNearbyMessage
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
@@ -38,7 +39,7 @@ class MainViewModel @Inject constructor(
         hasUserInformation()
     }
 
-    fun selectedUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
+    fun selectUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
         Transformations.switchMap(communicationRepository.communicationContents){ list ->
             val contentList = mutableListOf<NearbyCommunicationContent>()
             val selectedContents: MutableLiveData<List<NearbyCommunicationContent>> = MutableLiveData()

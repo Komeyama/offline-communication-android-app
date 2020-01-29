@@ -8,6 +8,9 @@ data class ActiveUser(val id:String,
                       val name:String,
                       val endPointId: String)
 
+data class HistoryUser(val id:String,
+                      val name:String)
+
 data class CommunicationContent(val sendUserId:String,
                                 val sendUserName:String,
                                 val receiveUserId:String,

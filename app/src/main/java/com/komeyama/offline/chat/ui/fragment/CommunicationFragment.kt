@@ -63,7 +63,7 @@ class CommunicationFragment : Fragment() {
 
         var oldListSize = 0
 
-        viewModel.selectedUserContent(communicationOpponentId).observe(viewLifecycleOwner, Observer { list ->
+        viewModel.selectUserContent(communicationOpponentId).observe(viewLifecycleOwner, Observer { list ->
             list.asReversed().apply{
                 this.forEachIndexed { index, value ->
                     if (oldListSize < index + 1) {

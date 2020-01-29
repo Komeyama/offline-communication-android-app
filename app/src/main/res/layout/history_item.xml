@@ -6,11 +6,11 @@
     <data>
         <variable
             name="userList"
-            type="com.komeyama.offline.chat.domain.ActiveUser" />
+            type="com.komeyama.offline.chat.domain.HistoryUser" />
 
         <variable
             name="userListCallback"
-            type="com.komeyama.offline.chat.ui.fragment.ActiveUserClick" />
+            type="com.komeyama.offline.chat.ui.fragment.HistoryUserClick" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,15 +47,24 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:textSize="20sp"
-            android:layout_marginTop="17dp"
+            android:paddingTop="10dp"
             android:layout_marginStart="10dp"
             android:textColor="@color/text_black"
             android:text="@{userList.name}"
             app:layout_constraintEnd_toStartOf="@+id/right_well"
             app:layout_constraintStart_toEndOf="@+id/active_user_icon"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/latest_time"
             tools:text="User Name" />
+
+        <TextView
+            android:id="@+id/latest_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_history_time"
+            app:layout_constraintStart_toStartOf="@+id/active_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/active_user_name"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <View
             android:id="@+id/clickableOverlay"
