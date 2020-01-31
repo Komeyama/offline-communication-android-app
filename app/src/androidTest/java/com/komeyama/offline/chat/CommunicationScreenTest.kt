@@ -14,6 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.komeyama.offline.chat.domain.ActiveUser
+import com.komeyama.offline.chat.domain.HistoryUser
 import com.komeyama.offline.chat.nearbyclient.ConnectingStatus
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
@@ -85,7 +86,7 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
             .perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1,
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(2,
                     ViewActions.click()
                 ))
         waitNextProcess(1)
@@ -96,6 +97,17 @@ class CommunicationScreenTest {
         requestResult.postValue(RequestResult.UNREQUEST)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
+
+        countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
+        nearbyClient.connectedOpponentUserInfo.onNext(
+            HistoryUser(
+                "12345c",
+                "nearby test2",
+                Date().toDateString()
+            )
+        )
+        waitNextProcess(1)
+
         nearbyClient.receiveContent.onNext(
             NearbyCommunicationContent("dummySenderID_0", "dummySenderName_0", "dummyReceiverID", "dummyReceiverName", Date().toDateString(), "Hello")
         )
@@ -123,7 +135,7 @@ class CommunicationScreenTest {
 
 
         nearbyClient.receiveContent.onNext(
-            NearbyCommunicationContent("dummySenderID_1", "dummySenderName_1", "dummyReceiverID", "dummyReceiverName", Date().toDateString(),  "Hello_!")
+            NearbyCommunicationContent("12345c", "nearby test2", "dummyReceiverID", "dummyReceiverName", Date().toDateString(),  "Hello_!")
         )
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)

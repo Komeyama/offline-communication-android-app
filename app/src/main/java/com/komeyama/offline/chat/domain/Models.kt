@@ -4,12 +4,15 @@ import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.util.toDateString
 import java.util.*
 
-data class ActiveUser(val id:String,
-                      val name:String,
-                      val endPointId: String)
+data class ActiveUser(
+    val id: String,
+    val name: String,
+    val endPointId: String)
 
-data class HistoryUser(val id:String,
-                      val name:String)
+data class HistoryUser(
+    val id: String,
+    val name: String,
+    val latestDate: String)
 
 data class CommunicationContent(val sendUserId:String,
                                 val sendUserName:String,

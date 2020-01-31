@@ -3,10 +3,10 @@ package com.komeyama.offline.chat.ui
 import androidx.lifecycle.*
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
-import com.komeyama.offline.chat.domain.HistoryUser
 import com.komeyama.offline.chat.domain.asNearbyMessage
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
+import com.komeyama.offline.chat.repository.CommunicatedUserRepository
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +20,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val userInformationService: UserInformationService,
     private val communicationRepository: CommunicationRepository,
+    private val communicatedUserRepository: CommunicatedUserRepository,
     private val nearbyClient: NearbyClient
 ): ViewModel(){
 
@@ -27,6 +28,7 @@ class MainViewModel @Inject constructor(
     val invitedInfo = nearbyClient.inviteEndpointInfo
     val requestResult = nearbyClient.requestResult
     val connectingStatus = nearbyClient.connectingStatus
+    val communicatedList = communicatedUserRepository.communicatedList
     private val _isExistUserInformation: MutableLiveData<Boolean> = MutableLiveData()
     val isExistUserInformation:LiveData<Boolean>
         get() = _isExistUserInformation
@@ -118,6 +120,20 @@ class MainViewModel @Inject constructor(
 
     fun requestConnection(requestEndpointId: String) {
         nearbyClient.requestConnection(createUserIdAndName(), requestEndpointId)
+    }
+
+    fun checkCommunicatedUserName() {
+        Timber.d("checkCommunicatedUserName")
+        viewModelScope.launch {
+            try {
+                val communicatedUser = communicatedUserRepository.getCommunicatedUserList()
+                communicatedUserRepository.checkUserName(communicatedUser)
+            } catch (error: IOException) {}
+        }
+    }
+
+    fun stopCheckCommunicatedUserName() {
+        communicatedUserRepository.stopCheckUserName()
     }
 
     fun startRefreshMessages() {

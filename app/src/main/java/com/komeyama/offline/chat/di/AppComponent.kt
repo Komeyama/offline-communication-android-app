@@ -18,8 +18,9 @@ import javax.inject.Singleton
     modules=[
         AppModule::class,
         ViewModelModule::class,
-        CommunicationDatabaseModule::class,
         UserInfoDatabaseModule::class,
+        CommunicationDatabaseModule::class,
+        CommunicatedUserDatabaseModule::class,
         NearbyModule::class
     ]
 )

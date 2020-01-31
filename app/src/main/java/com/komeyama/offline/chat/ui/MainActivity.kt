@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 currentFragmentToConfirmAcceptanceDialog(user)
             }
         })
+        viewModel.checkCommunicatedUserName()
     }
 
     override fun onRequestPermissionsResult(

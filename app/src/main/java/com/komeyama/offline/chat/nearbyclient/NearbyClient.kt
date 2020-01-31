@@ -9,12 +9,15 @@ import com.google.android.gms.nearby.connection.*
 import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
+import com.komeyama.offline.chat.domain.HistoryUser
 import com.komeyama.offline.chat.domain.asNearbyMessage
 import com.komeyama.offline.chat.util.splitUserIdAndName
+import com.komeyama.offline.chat.util.toDateString
 import com.squareup.moshi.Moshi
 import io.reactivex.processors.PublishProcessor
 import timber.log.Timber
 import java.nio.charset.StandardCharsets
+import java.util.*
 import javax.inject.Inject
 
 enum class ConnectionType{
@@ -39,13 +42,16 @@ class NearbyClient @Inject constructor(
     val application: Application,
     val moshi: Moshi
 ) {
+
     private val nearbyStrategy = P2P_POINT_TO_POINT
-    private var connectionType: ConnectionType = ConnectionType.RECEIVER
-    private var currentUserIdAndName:String = ""
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
-    private var connectedEndpointId: String = ""
     private val currentActiveUsrSet: MutableSet<ActiveUser> = mutableSetOf()
+
+    private var connectionType: ConnectionType = ConnectionType.RECEIVER
+    private var currentUserIdAndName:String = ""
+    private var connectedEndpointId: String = ""
+
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
     val aroundEndpointInfo: LiveData<List<ActiveUser>>
         get() = _aroundEndpointInfo
@@ -58,9 +64,12 @@ class NearbyClient @Inject constructor(
     private val _requestResult: MutableLiveData<RequestResult> = MutableLiveData()
     val requestResult: LiveData<RequestResult>
         get() = _requestResult
-    private val _connectingStatus:  MutableLiveData<ConnectingStatus> = MutableLiveData()
+    private val _connectingStatus: MutableLiveData<ConnectingStatus> = MutableLiveData()
     val connectingStatus: LiveData<ConnectingStatus>
-            get() = _connectingStatus
+        get() = _connectingStatus
+    private val _connectedOpponentUserInfo: PublishProcessor<HistoryUser> = PublishProcessor.create()
+    val connectedOpponentUserInfo: PublishProcessor<HistoryUser>
+        get() = _connectedOpponentUserInfo
 
     fun startNearbyClient(userIdAndName: String) {
         currentUserIdAndName = userIdAndName
@@ -164,6 +173,14 @@ class NearbyClient @Inject constructor(
                 ),
                 connectionType)
             _inviteEndpointInfo.postValue(list)
+
+            _connectedOpponentUserInfo.onNext(
+                HistoryUser(
+                    connectionInfo.endpointName.splitUserIdAndName().userId,
+                    connectionInfo.endpointName.splitUserIdAndName().userName,
+                    Date().toDateString()
+                )
+            )
         }
 
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
@@ -227,6 +244,7 @@ class NearbyClient @Inject constructor(
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
             Timber.d("onPayloadTransferUpdate: %s", endpointId)
             connectedEndpointId = endpointId
+
         }
 
     }

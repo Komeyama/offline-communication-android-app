@@ -1,6 +1,8 @@
 package com.komeyama.offline.chat.nearbyclient
 
+import com.komeyama.offline.chat.database.communicateduser.CommunicatedUserEntities
 import com.komeyama.offline.chat.database.communication.CommunicationContentsEntities
+import com.komeyama.offline.chat.domain.HistoryUser
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
@@ -21,4 +23,13 @@ fun NearbyCommunicationContent.asDomainModel(): CommunicationContentsEntities {
         receiveName,
         sendTime,
         content)
+}
+
+fun HistoryUser.asDomainModel(): CommunicatedUserEntities {
+    return CommunicatedUserEntities(
+        0,
+        id,
+        name,
+        latestDate
+    )
 }
