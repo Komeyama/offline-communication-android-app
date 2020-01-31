@@ -9,6 +9,7 @@ import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicatedUserRepository
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
+import com.komeyama.offline.chat.util.createUserIdAndName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -56,7 +57,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun startNearbyClient() {
         withContext(Dispatchers.IO) {
-            nearbyClient.startNearbyClient(createUserIdAndName())
+            nearbyClient.startNearbyClient(currentUserInformation.createUserIdAndName())
         }
     }
 
@@ -119,19 +120,14 @@ class MainViewModel @Inject constructor(
     }
 
     fun requestConnection(requestEndpointId: String) {
-        nearbyClient.requestConnection(createUserIdAndName(), requestEndpointId)
+        nearbyClient.requestConnection( currentUserInformation.createUserIdAndName(), requestEndpointId)
     }
 
     fun checkCommunicatedUserName() {
         Timber.d("checkCommunicatedUserName")
         viewModelScope.launch {
             try {
-                val communicatedUserList = communicatedUserRepository.getCommunicatedUserList()
-                val communicatedUserIds:MutableSet<String> = mutableSetOf()
-                communicatedUserList.map {
-                    communicatedUserIds.add(it.communicatedUserId)
-                }
-                communicatedUserRepository.checkUserName(communicatedUserIds)
+                communicatedUserRepository.checkUserName()
             } catch (error: IOException) {}
         }
     }
@@ -167,10 +163,6 @@ class MainViewModel @Inject constructor(
             Date(),
             message
         )
-    }
-
-    private fun createUserIdAndName(): String{
-        return currentUserInformation.userId + ":" + currentUserInformation.userName
     }
 
     override fun onCleared() {

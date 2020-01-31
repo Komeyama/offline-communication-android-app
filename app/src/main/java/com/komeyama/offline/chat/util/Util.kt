@@ -13,6 +13,10 @@ fun String.splitUserIdAndName(): UserInformationEntities {
     return UserInformationEntities(userId = userId, userName = userName)
 }
 
+fun UserInformationEntities.createUserIdAndName(): String{
+    return this.userId + ":" + this.userName
+}
+
 const val dateFormatType = "yyyy/MM/dd HH:mm:ss"
 
 fun String.toDate(): Date{

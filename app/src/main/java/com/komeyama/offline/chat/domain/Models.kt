@@ -10,9 +10,9 @@ data class ActiveUser(
     val endPointId: String)
 
 data class HistoryUser(
-    val id: String,
-    val name: String,
-    val latestDate: String)
+    val id: String = "",
+    val name: String = "",
+    var latestDate: String = "")
 
 data class CommunicationContent(val sendUserId:String,
                                 val sendUserName:String,

@@ -51,6 +51,7 @@ class NearbyClient @Inject constructor(
     private var connectionType: ConnectionType = ConnectionType.RECEIVER
     private var currentUserIdAndName:String = ""
     private var connectedEndpointId: String = ""
+    private lateinit var currentOpponentInfo: HistoryUser
 
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
     val aroundEndpointInfo: LiveData<List<ActiveUser>>
@@ -174,12 +175,10 @@ class NearbyClient @Inject constructor(
                 connectionType)
             _inviteEndpointInfo.postValue(list)
 
-            _connectedOpponentUserInfo.onNext(
-                HistoryUser(
-                    connectionInfo.endpointName.splitUserIdAndName().userId,
-                    connectionInfo.endpointName.splitUserIdAndName().userName,
-                    Date().toDateString()
-                )
+            currentOpponentInfo = HistoryUser(
+                connectionInfo.endpointName.splitUserIdAndName().userId,
+                connectionInfo.endpointName.splitUserIdAndName().userName,
+                Date().toDateString()
             )
         }
 
@@ -244,7 +243,7 @@ class NearbyClient @Inject constructor(
         override fun onPayloadTransferUpdate(endpointId: String, update: PayloadTransferUpdate) {
             Timber.d("onPayloadTransferUpdate: %s", endpointId)
             connectedEndpointId = endpointId
-
+            currentOpponentInfo.latestDate = Date().toDateString()
         }
 
     }
@@ -269,6 +268,7 @@ class NearbyClient @Inject constructor(
             ),
             connectionType)
         _inviteEndpointInfo.postValue(list)
+        _connectedOpponentUserInfo.onNext(currentOpponentInfo)
         reStartNearbyClient()
     }
 
