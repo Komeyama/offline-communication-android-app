@@ -7,60 +7,52 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
-import com.komeyama.offline.chat.nearbyclient.ConnectingStatus
 import com.komeyama.offline.chat.ui.MainViewModel
 import com.komeyama.offline.chat.util.Author
 import com.komeyama.offline.chat.util.Message
 import com.komeyama.offline.chat.util.toDate
 import com.stfalcon.chatkit.messages.MessagesListAdapter
-import kotlinx.android.synthetic.main.fragment_communication.*
-import javax.inject.Inject
+import kotlinx.android.synthetic.main.fragment_communicated.*
 import timber.log.Timber
+import javax.inject.Inject
 
-class CommunicationFragment : Fragment() {
+class CommunicationHistoryFragment: Fragment() {
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
     lateinit var viewModel: MainViewModel
-    private var communicationOpponentId = ""
-    private var communicationOpponentName = ""
+    private var communicatedOpponentId = ""
+    private var communicatedOpponentName = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val args =
-            CommunicationFragmentArgs.fromBundle(
-                arguments!!
-            )
-        communicationOpponentId = args.communicationOpponentId
-        communicationOpponentName = args.communicationOpponentName
+        val args = CommunicationHistoryFragmentArgs.fromBundle(arguments!!)
+        communicatedOpponentId = args.communicatedOpponentId
+        communicatedOpponentName = args.communicatedOpponentName
 
-        (activity?.application as MainApplication).appComponent.injectionToCommunicationFragment(this)
+        (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
 
-        return inflater.inflate(R.layout.fragment_communication, container, false)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.stopRefreshMessages()
+        return inflater.inflate(R.layout.fragment_communicated, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel.startRefreshMessages()
 
         val adapter = MessagesListAdapter<Message>(viewModel.currentUserInformation.userId, null)
-        messagesList.setAdapter(adapter)
+        historyMessagesList.setAdapter(adapter)
+        Timber.d("viewModel:currentUserInformation:userId: %s", viewModel.currentUserInformation.userId)
 
         var oldListSize = 0
-        viewModel.selectUserContent(communicationOpponentId).observe(viewLifecycleOwner, Observer { list ->
+        viewModel.selectUserContent(communicatedOpponentId).observe(viewLifecycleOwner, Observer { list ->
+            Timber.d("list: %s", list)
+            Timber.d("communicationOpponentId: %s", communicatedOpponentId)
             list.asReversed().apply{
                 this.forEachIndexed { index, value ->
                     if (oldListSize < index + 1) {
@@ -81,22 +73,6 @@ class CommunicationFragment : Fragment() {
                 oldListSize = list.size
             }
         })
-
-        input.setInputListener {
-            viewModel.sendMessage(
-                it.toString(),
-                communicationOpponentId,
-                communicationOpponentName
-            )
-            true
-        }
-
-        viewModel.connectingStatus.observe(viewLifecycleOwner, Observer {
-            Timber.d("connectingStatus:%s", it)
-            if (it == ConnectingStatus.LOST) {
-                findNavController().navigate(R.id.action_CommunicationFragment_to_disconnectedMessageDialog)
-            }
-        })
-
     }
+
 }

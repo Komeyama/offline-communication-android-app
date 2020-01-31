@@ -126,8 +126,12 @@ class MainViewModel @Inject constructor(
         Timber.d("checkCommunicatedUserName")
         viewModelScope.launch {
             try {
-                val communicatedUser = communicatedUserRepository.getCommunicatedUserList()
-                communicatedUserRepository.checkUserName(communicatedUser)
+                val communicatedUserList = communicatedUserRepository.getCommunicatedUserList()
+                val communicatedUserIds:MutableSet<String> = mutableSetOf()
+                communicatedUserList.map {
+                    communicatedUserIds.add(it.communicatedUserId)
+                }
+                communicatedUserRepository.checkUserName(communicatedUserIds)
             } catch (error: IOException) {}
         }
     }

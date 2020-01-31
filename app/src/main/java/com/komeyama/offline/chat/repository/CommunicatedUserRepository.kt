@@ -29,26 +29,20 @@ class CommunicatedUserRepository (
     }
 
     @SuppressLint("CheckResult")
-    suspend fun checkUserName(currentCommunicatedList: List<CommunicatedUserEntities>) {
+    suspend fun checkUserName(currentCommunicatedIds: Set<String>) {
         withContext(Dispatchers.IO) {
             disposable = nearbyClient.
                 connectedOpponentUserInfo.
                 observeOn(Schedulers.io()).
                 subscribe { newHistoryUser ->
                     Timber.d("new communicated user: %s", newHistoryUser)
-                    if (currentCommunicatedList.isEmpty()) {
-                        Timber.d("old communicated user is null")
+                    if (!currentCommunicatedIds.contains(newHistoryUser.id) || currentCommunicatedIds.isEmpty()) {
+                        Timber.d("old communicated user id != old communicated user id")
                         dao.insert(newHistoryUser.asDomainModel())
+                    } else {
+                        Timber.d("old communicated user id == old communicated user id")
+                        dao.update(newHistoryUser.asDomainModel())
                     }
-                    currentCommunicatedList.forEach { oldHistoryUser ->
-                        if(oldHistoryUser.communicatedUserId != newHistoryUser.id) {
-                            Timber.d("old communicated user id != old communicated user id")
-                            dao.insert(newHistoryUser.asDomainModel())
-                        } else {
-                            Timber.d("old communicated user id == old communicated user id")
-                            dao.update(newHistoryUser.asDomainModel())
-                    }
-                }
             }
         }
     }

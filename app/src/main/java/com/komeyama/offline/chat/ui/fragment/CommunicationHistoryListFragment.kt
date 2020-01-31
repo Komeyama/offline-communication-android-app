@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.komeyama.offline.chat.MainApplication
@@ -48,6 +49,12 @@ class CommunicationHistoryListFragment: Fragment(){
 
         viewModelAdapter = CommunicationHistoryListAdapter(HistoryUserClick{
             Timber.d("click history item: %s",it)
+            findNavController().navigate(
+                CommunicationHistoryListFragmentDirections.actionCommunicationHistoryListFragmentToCommunicationHistoryFragment(
+                    communicatedOpponentId = it.id,
+                    communicatedOpponentName = it.name
+                )
+            )
         })
 
         binding.recyclerHistoryView.findViewById<RecyclerView>(R.id.recycler_history_view).apply {

@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener{ _ , destination , _ ->
             currentFragment = destination.id
             when (currentFragment) {
-                R.id.CommunicationFragment -> setVisibilityOfBottomNavigation(false)
+                R.id.CommunicationFragment, R.id.communicationHistoryFragment -> setVisibilityOfBottomNavigation(false)
                 else -> setVisibilityOfBottomNavigation(true)
             }
         }

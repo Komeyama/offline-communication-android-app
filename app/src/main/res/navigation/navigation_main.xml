@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_CommunicationHistoryListFragment_to_ConfirmAcceptanceDialog"
             app:destination="@+id/ConfirmAcceptanceDialog"/>
+        <action
+            android:id="@+id/action_CommunicationHistoryListFragment_to_communicationHistoryFragment"
+            app:destination="@id/communicationHistoryFragment" />
     </fragment>
 
     <fragment
@@ -112,5 +115,21 @@
             android:id="@+id/action_disconnectedMessageDialog_to_CommunicableUserListFragment"
             app:destination="@id/CommunicableUserListFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/communicationHistoryFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.CommunicationHistoryFragment"
+        android:label="CommunicationHistoryFragment" >
+        <action
+            android:id="@+id/action_communicationHistoryFragment_to_CommunicationHistoryListFragment"
+            app:destination="@id/CommunicationHistoryListFragment" />
+        <argument
+            android:name="communicatedOpponentId"
+            app:argType="string"
+            android:defaultValue="default" />
+        <argument
+            android:name="communicatedOpponentName"
+            app:argType="string"
+            android:defaultValue="default" />
+    </fragment>
 
 </navigation>

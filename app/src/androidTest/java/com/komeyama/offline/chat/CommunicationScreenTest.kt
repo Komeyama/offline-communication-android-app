@@ -86,7 +86,7 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         Espresso.onView(ViewMatchers.withId(R.id.recycler_view))
             .perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(2,
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1,
                     ViewActions.click()
                 ))
         waitNextProcess(1)
@@ -101,8 +101,8 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         nearbyClient.connectedOpponentUserInfo.onNext(
             HistoryUser(
-                "12345c",
-                "nearby test2",
+                "dummySenderID_0",
+                "dummySenderName",
                 Date().toDateString()
             )
         )
