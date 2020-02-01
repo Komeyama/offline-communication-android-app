@@ -26,7 +26,7 @@ enum class ConnectionType{
 }
 
 enum class RequestResult{
-    UNREQUEST,
+    NOT_REQUEST,
     LOADING,
     SUCCESS,
     CANCELED,
@@ -42,17 +42,19 @@ class NearbyClient @Inject constructor(
     val application: Application,
     val moshi: Moshi
 ) {
-
-    private val nearbyStrategy = P2P_POINT_TO_POINT
+    // immutable variable
     private val connectionsClient = Nearby.getConnectionsClient( application.applicationContext )
     private val serviceId = application.packageName
     private val currentActiveUsrSet: MutableSet<ActiveUser> = mutableSetOf()
 
+    // mutable variable
+    private var nearbyStrategy = P2P_POINT_TO_POINT
     private var connectionType: ConnectionType = ConnectionType.RECEIVER
-    private var currentUserIdAndName:String = ""
+    private var currentMyselfUserIdAndName : String = ""
     private var connectedEndpointId: String = ""
     private lateinit var currentOpponentInfo: HistoryUser
 
+    // live data
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()
     val aroundEndpointInfo: LiveData<List<ActiveUser>>
         get() = _aroundEndpointInfo
@@ -72,24 +74,21 @@ class NearbyClient @Inject constructor(
     val connectedOpponentUserInfo: PublishProcessor<HistoryUser>
         get() = _connectedOpponentUserInfo
 
-    fun startNearbyClient(userIdAndName: String) {
-        currentUserIdAndName = userIdAndName
-        startAdvertising(currentUserIdAndName)
-        startDiscovery()
+    fun setupNearbyClient(userIdAndName: String, nearbyStrategy: Strategy) {
+        this.nearbyStrategy = nearbyStrategy
+        this.currentMyselfUserIdAndName  = userIdAndName
+        startNearbyClient()
+    }
+
+    fun reStartNearbyClient() {
+        stopNearbyClient()
+        startNearbyClient()
     }
 
     fun stopNearbyClient() {
-        /**
-         * Todo: add nearby stop process
-         */
+        resetCommunication()
         connectionsClient.stopAdvertising()
         connectionsClient.stopDiscovery()
-    }
-
-    private fun reStartNearbyClient() {
-        connectionType = ConnectionType.RECEIVER
-        stopNearbyClient()
-        startNearbyClient(currentUserIdAndName)
     }
 
     fun acceptConnection(acceptEndpointId: String) {
@@ -129,10 +128,15 @@ class NearbyClient @Inject constructor(
         connectionsClient.sendPayload(connectedEndpointId, payLoad)
     }
 
-    private fun startAdvertising(userIdAndName: String) {
+    private fun startNearbyClient() {
+        startAdvertising()
+        startDiscovery()
+    }
+
+    private fun startAdvertising() {
         val advertisingOptions: AdvertisingOptions = AdvertisingOptions.Builder().setStrategy(nearbyStrategy).build()
         connectionsClient.startAdvertising(
-            userIdAndName,
+            currentMyselfUserIdAndName,
             serviceId,
             connectionLifecycleCallback,
             advertisingOptions
@@ -200,6 +204,7 @@ class NearbyClient @Inject constructor(
         override fun onDisconnected(endpointId: String) {
             Timber.d("onDisconnected: %s", endpointId)
             _connectingStatus.postValue(ConnectingStatus.LOST)
+            _connectedOpponentUserInfo.onNext(currentOpponentInfo)
             resetCommunication()
         }
     }
@@ -259,17 +264,10 @@ class NearbyClient @Inject constructor(
     }
 
     private fun resetCommunication() {
-        _requestResult.postValue(RequestResult.UNREQUEST)
-        val list:Iterable<*> = listOf(
-            ActiveUser(
-                "",
-                "",
-                ""
-            ),
-            connectionType)
+        Timber.d("resetCommunication: ")
+        connectionType = ConnectionType.RECEIVER
+        _requestResult.postValue(RequestResult.NOT_REQUEST)
+        val list:Iterable<*> = listOf(ActiveUser.EMPTY, connectionType)
         _inviteEndpointInfo.postValue(list)
-        _connectedOpponentUserInfo.onNext(currentOpponentInfo)
-        reStartNearbyClient()
     }
-
 }

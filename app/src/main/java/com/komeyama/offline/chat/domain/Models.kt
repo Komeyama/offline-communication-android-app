@@ -7,19 +7,24 @@ import java.util.*
 data class ActiveUser(
     val id: String,
     val name: String,
-    val endPointId: String)
+    val endPointId: String){
+    companion object {
+        val EMPTY = ActiveUser("", "", "")
+    }
+}
 
 data class HistoryUser(
-    val id: String = "",
-    val name: String = "",
-    var latestDate: String = "")
+    val id: String,
+    val name: String,
+    var latestDate: String)
 
-data class CommunicationContent(val sendUserId:String,
-                                val sendUserName:String,
-                                val receiveUserId:String,
-                                val receiveName:String,
-                                val sendTime: Date,
-                                val content:String)
+data class CommunicationContent(
+    val sendUserId:String,
+    val sendUserName:String,
+    val receiveUserId:String,
+    val receiveName:String,
+    val sendTime: Date,
+    val content:String)
 
 fun CommunicationContent.asNearbyMessage(): NearbyCommunicationContent {
     return NearbyCommunicationContent(

@@ -1,6 +1,7 @@
 package com.komeyama.offline.chat.ui
 
 import androidx.lifecycle.*
+import com.google.android.gms.nearby.connection.Strategy
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
 import com.komeyama.offline.chat.domain.asNearbyMessage
@@ -42,22 +43,9 @@ class MainViewModel @Inject constructor(
         hasUserInformation()
     }
 
-    fun selectUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
-        Transformations.switchMap(communicationRepository.communicationContents){ list ->
-            val contentList = mutableListOf<NearbyCommunicationContent>()
-            val selectedContents: MutableLiveData<List<NearbyCommunicationContent>> = MutableLiveData()
-            list.forEach{
-                if (it.sendUserId == communicationOpponentId || it.receiveUserId == communicationOpponentId) {
-                    contentList.add(it)
-                }
-            }
-            selectedContents.value = contentList
-            return@switchMap selectedContents
-        }
-
     private suspend fun startNearbyClient() {
         withContext(Dispatchers.IO) {
-            nearbyClient.startNearbyClient(currentUserInformation.createUserIdAndName())
+            nearbyClient.setupNearbyClient(currentUserInformation.createUserIdAndName(), Strategy.P2P_POINT_TO_POINT)
         }
     }
 
@@ -66,7 +54,6 @@ class MainViewModel @Inject constructor(
             nearbyClient.stopNearbyClient()
         }
     }
-
 
     private fun hasUserInformation() {
         viewModelScope.launch {
@@ -89,6 +76,19 @@ class MainViewModel @Inject constructor(
             } catch (error: IOException) {}
         }
     }
+
+    fun selectUserContent(communicationOpponentId: String): LiveData<List<NearbyCommunicationContent>> =
+        Transformations.switchMap(communicationRepository.communicationContents){ list ->
+            val contentList = mutableListOf<NearbyCommunicationContent>()
+            val selectedContents: MutableLiveData<List<NearbyCommunicationContent>> = MutableLiveData()
+            list.forEach{
+                if (it.sendUserId == communicationOpponentId || it.receiveUserId == communicationOpponentId) {
+                    contentList.add(it)
+                }
+            }
+            selectedContents.value = contentList
+            return@switchMap selectedContents
+        }
 
     fun updateUserName(newUserName: String) {
         viewModelScope.launch {

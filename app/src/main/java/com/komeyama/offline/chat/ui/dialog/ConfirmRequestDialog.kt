@@ -23,8 +23,7 @@ class ConfirmRequestDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val args =
-            ConfirmAcceptanceDialogArgs.fromBundle(arguments!!)
+        val args = ConfirmAcceptanceDialogArgs.fromBundle(arguments!!)
         val message: String = getString(R.string.confirm_request_dialog_message) + " " + args.userName + " ?"
         return AlertDialog.Builder(requireActivity())
             .setTitle(R.string.confirm_request_dialog_title)
@@ -50,4 +49,5 @@ class ConfirmRequestDialog : DialogFragment() {
 
         return super.onCreateView(inflater, container, savedInstanceState)
     }
+
 }

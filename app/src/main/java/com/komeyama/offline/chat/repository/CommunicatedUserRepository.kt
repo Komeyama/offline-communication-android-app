@@ -37,10 +37,8 @@ class CommunicatedUserRepository (
                 subscribe { newHistoryUser ->
                     Timber.d("new communicated user: %s", newHistoryUser)
                     val currentCommunicatedIds: MutableSet<String> = mutableSetOf()
-                    var databaseId = 0
                     dao.getCommunicatedUserList().map {
                         currentCommunicatedIds.add(it.communicatedUserId)
-                        databaseId = it.databaseId
                     }
 
                     if (!currentCommunicatedIds.contains(newHistoryUser.id) || currentCommunicatedIds.isEmpty()) {
@@ -48,7 +46,7 @@ class CommunicatedUserRepository (
                         dao.insert(newHistoryUser.asDomainModel())
                     } else {
                         Timber.d("old communicated user id == old communicated user id")
-                        dao. updateDate(newHistoryUser.id, newHistoryUser.latestDate)
+                        dao.updateDate(newHistoryUser.id, newHistoryUser.latestDate)
                     }
             }
         }

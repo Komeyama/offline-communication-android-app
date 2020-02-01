@@ -13,16 +13,20 @@
         tools:layout="@layout/fragment_communicable_user_list">
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_ConfirmAcceptanceDialog"
-            app:destination="@+id/ConfirmAcceptanceDialog"/>
+            app:destination="@+id/ConfirmAcceptanceDialog"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_ConfirmRequestDialog"
-            app:destination="@id/ConfirmRequestDialog" />
+            app:destination="@id/ConfirmRequestDialog"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_CommunicationFragment"
-            app:destination="@id/CommunicationFragment" />
+            app:destination="@id/CommunicationFragment"
+            app:popUpTo="@+id/ConfirmRequestDialog" />
         <action
             android:id="@+id/action_CommunicableUserListFragment_to_initialSettingDialog"
-            app:destination="@id/initialSettingDialog" />
+            app:destination="@id/initialSettingDialog"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
     </fragment>
 
     <fragment
@@ -32,10 +36,12 @@
         tools:layout="@layout/fragment_history">
         <action
             android:id="@+id/action_CommunicationHistoryListFragment_to_ConfirmAcceptanceDialog"
-            app:destination="@+id/ConfirmAcceptanceDialog"/>
+            app:destination="@+id/ConfirmAcceptanceDialog"
+            app:popUpTo="@+id/CommunicationHistoryListFragment" />
         <action
             android:id="@+id/action_CommunicationHistoryListFragment_to_communicationHistoryFragment"
-            app:destination="@id/communicationHistoryFragment" />
+            app:destination="@id/communicationHistoryFragment"
+            app:popUpTo="@+id/CommunicationHistoryListFragment" />
     </fragment>
 
     <fragment
@@ -45,7 +51,8 @@
         tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_SettingFragment_to_ConfirmAcceptanceDialog"
-            app:destination="@+id/ConfirmAcceptanceDialog"/>
+            app:destination="@+id/ConfirmAcceptanceDialog"
+            app:popUpTo="@+id/SettingFragment" />
     </fragment>
 
     <fragment
@@ -62,7 +69,8 @@
             android:defaultValue="default" />
         <action
             android:id="@+id/action_CommunicationFragment_to_disconnectedMessageDialog"
-            app:destination="@id/disconnectedMessageDialog" />
+            app:destination="@id/disconnectedMessageDialog"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
     </fragment>
 
     <dialog
@@ -71,7 +79,8 @@
         android:label="ConfirmAcceptanceDialog">
         <action
             android:id="@+id/action_ConfirmAcceptanceDialog_to_CommunicationFragment"
-            app:destination="@id/CommunicationFragment" />
+            app:destination="@id/CommunicationFragment"
+            app:popUpTo="@+id/SettingFragment" />
         <argument
             android:name="id"
             app:argType="string"
@@ -113,7 +122,8 @@
         android:label="DisconnectedMessageDialog" >
         <action
             android:id="@+id/action_disconnectedMessageDialog_to_CommunicableUserListFragment"
-            app:destination="@id/CommunicableUserListFragment" />
+            app:destination="@id/CommunicableUserListFragment"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
     </dialog>
     <fragment
         android:id="@+id/communicationHistoryFragment"
@@ -121,7 +131,8 @@
         android:label="CommunicationHistoryFragment" >
         <action
             android:id="@+id/action_communicationHistoryFragment_to_CommunicationHistoryListFragment"
-            app:destination="@id/CommunicationHistoryListFragment" />
+            app:destination="@id/CommunicationHistoryListFragment"
+            app:popUpTo="@+id/communicationHistoryFragment" />
         <argument
             android:name="communicatedOpponentId"
             app:argType="string"

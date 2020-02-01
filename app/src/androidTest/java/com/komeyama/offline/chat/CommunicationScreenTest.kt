@@ -94,7 +94,7 @@ class CommunicationScreenTest {
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         requestResult.postValue(RequestResult.SUCCESS)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
-        requestResult.postValue(RequestResult.UNREQUEST)
+        requestResult.postValue(RequestResult.NOT_REQUEST)
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         waitNextProcess(3)
 

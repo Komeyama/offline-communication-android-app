@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class UserInformationService @Inject constructor(
+class UserInformationService (
     private val userInformationDao:UserInformationDao
 ) {
     suspend fun existsUserInformation() =

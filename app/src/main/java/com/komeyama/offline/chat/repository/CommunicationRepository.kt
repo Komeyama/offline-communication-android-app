@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class CommunicationRepository @Inject constructor(
+class CommunicationRepository (
     val dao :CommunicationContentsDao,
     val nearbyClient: NearbyClient
 ) {
