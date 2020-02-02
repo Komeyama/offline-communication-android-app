@@ -24,7 +24,15 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="parent"/>
+            app:layout_constraintStart_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/app_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp"/>
+
+        </androidx.appcompat.widget.Toolbar>
 
         <FrameLayout
             android:id="@+id/main_view"

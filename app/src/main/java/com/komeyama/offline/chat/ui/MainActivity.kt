@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
@@ -47,9 +49,20 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener{ _ , destination , _ ->
             currentFragment = destination.id
             when (currentFragment) {
-                R.id.CommunicationFragment, R.id.communicationHistoryFragment -> setVisibilityOfBottomNavigation(false)
-                else -> setVisibilityOfBottomNavigation(true)
+                R.id.CommunicationFragment, R.id.communicationHistoryFragment -> {
+                    setVisibilityOfBottomNavigation(false)
+                    app_back_button.visibility = View.VISIBLE
+                }
+                else -> {
+                    setVisibilityOfBottomNavigation(true)
+                    app_back_button.visibility = View.GONE
+                }
             }
+        }
+
+        // Set Back Button Action
+        app_back_button.setOnClickListener {
+            navController.navigateUp()
         }
 
         // Set ViewModel
@@ -60,6 +73,10 @@ class MainActivity : AppCompatActivity() {
 
         startNearbyClientWithPermissionCheck()
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
