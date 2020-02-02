@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import com.google.android.gms.nearby.connection.ConnectionsStatusCodes.*
 import com.google.android.gms.nearby.connection.Strategy.P2P_POINT_TO_POINT
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.domain.CommunicationContent
@@ -29,11 +30,11 @@ enum class RequestResult{
     NOT_REQUEST,
     LOADING,
     SUCCESS,
-    CANCELED,
-    INTERRUPTED
+    CANCELED
 }
 
 enum class ConnectingStatus{
+    NOT_CONNECTING,
     CONNECTING,
     LOST
 }
@@ -89,6 +90,13 @@ class NearbyClient @Inject constructor(
         resetCommunication()
         connectionsClient.stopAdvertising()
         connectionsClient.stopDiscovery()
+    }
+
+    fun finishCommunication() {
+        connectionsClient.stopAllEndpoints()
+        _connectingStatus.postValue(ConnectingStatus.NOT_CONNECTING)
+        _connectedOpponentUserInfo.onNext(currentOpponentInfo)
+        resetCommunication()
     }
 
     fun acceptConnection(acceptEndpointId: String) {
@@ -188,16 +196,16 @@ class NearbyClient @Inject constructor(
 
         override fun onConnectionResult(endpointId: String, result: ConnectionResolution) {
             Timber.d("connection result: %s", result.status)
-            when(result.status) {
-                Status.RESULT_SUCCESS -> {
+            when(result.status.statusCode) {
+                STATUS_OK-> {
                     connectedEndpointId = endpointId
                 }
-                Status.RESULT_CANCELED -> {
-                    _requestResult.postValue(RequestResult.CANCELED)
+                else -> {
+                    _connectingStatus.postValue(ConnectingStatus.LOST)
+                    _connectedOpponentUserInfo.onNext(currentOpponentInfo)
+                    resetCommunication()
                 }
-                Status.RESULT_INTERRUPTED -> {
-                    _requestResult.postValue(RequestResult.INTERRUPTED)
-                }
+
             }
         }
 

@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,13 +24,14 @@ import com.komeyama.offline.chat.ui.MainViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
-class CommunicableUserListFragment :Fragment(){
+class CommunicableUserListFragment :Fragment(), TransitionNavigator{
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
     private lateinit var viewModelAdapter: CommunicableUserListAdapter
+    private lateinit var navController: NavController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
@@ -42,7 +44,9 @@ class CommunicableUserListFragment :Fragment(){
             false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        viewModel.transitionNavigator = this
 
+        navController = findNavController()
         viewModelAdapter =
             CommunicableUserListAdapter(ActiveUserClick {
                 viewModel.communicationOpponentInfo =
@@ -51,7 +55,7 @@ class CommunicableUserListFragment :Fragment(){
                         it.name,
                         it.endPointId
                     )
-                findNavController().navigate(
+                navController.navigate(
                     CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToConfirmRequestDialog(
                         id = it.id,
                         userName = it.name,
@@ -79,7 +83,7 @@ class CommunicableUserListFragment :Fragment(){
             Timber.d("request result: %s", it.toString())
             when(it) {
                 RequestResult.SUCCESS -> {
-                    findNavController().navigate(
+                    navController.navigate(
                         CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToCommunicationFragment(
                             communicationOpponentId = viewModel.communicationOpponentInfo.id,
                             communicationOpponentName = viewModel.communicationOpponentInfo.name
@@ -92,6 +96,20 @@ class CommunicableUserListFragment :Fragment(){
             }
         })
     }
+
+    override fun showConfirmAcceptanceDialog() {
+        navController.navigate(
+            CommunicableUserListFragmentDirections.
+                actionCommunicableUserListFragmentToConfirmAcceptanceDialog(
+                    id = viewModel.communicationOpponentInfo.id,
+                    userName = viewModel.communicationOpponentInfo.name,
+                    endPointId = viewModel.communicationOpponentInfo.endpointId
+                )
+        )
+    }
+
+    override fun showConfirmFinishCommunication() {}
+
 }
 
 class ActiveUserClick(val user:(ActiveUser) -> Unit) {

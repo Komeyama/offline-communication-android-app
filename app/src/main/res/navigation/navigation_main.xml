@@ -71,6 +71,10 @@
             android:id="@+id/action_CommunicationFragment_to_disconnectedMessageDialog"
             app:destination="@id/disconnectedMessageDialog"
             app:popUpTo="@+id/CommunicableUserListFragment" />
+        <action
+            android:id="@+id/action_CommunicationFragment_to_confirmFinishCommunicationDialog"
+            app:destination="@id/confirmFinishCommunicationDialog"
+            app:popUpTo="@+id/CommunicationFragment" />
     </fragment>
 
     <dialog
@@ -95,6 +99,7 @@
             android:defaultValue='" "' />
 
     </dialog>
+
     <dialog
         android:id="@+id/ConfirmRequestDialog"
         android:name="com.komeyama.offline.chat.ui.dialog.ConfirmRequestDialog"
@@ -112,10 +117,12 @@
             app:argType="string"
             android:defaultValue='" "' />
     </dialog>
+
     <dialog
         android:id="@+id/initialSettingDialog"
         android:name="com.komeyama.offline.chat.ui.dialog.InitialSettingDialog"
         android:label="InitialSettingDialog" />
+
     <dialog
         android:id="@+id/disconnectedMessageDialog"
         android:name="com.komeyama.offline.chat.ui.dialog.DisconnectedMessageDialog"
@@ -125,6 +132,17 @@
             app:destination="@id/CommunicableUserListFragment"
             app:popUpTo="@+id/CommunicableUserListFragment" />
     </dialog>
+
+    <dialog
+        android:id="@+id/confirmFinishCommunicationDialog"
+        android:name="com.komeyama.offline.chat.ui.dialog.ConfirmFinishCommunicationDialog"
+        android:label="ConfirmFinishCommunicationDialog" >
+        <action
+            android:id="@+id/action_confirmFinishCommunicationDialog_to_CommunicableUserListFragment"
+            app:destination="@id/CommunicableUserListFragment"
+            app:popUpTo="@+id/CommunicableUserListFragment" />
+    </dialog>
+
     <fragment
         android:id="@+id/communicationHistoryFragment"
         android:name="com.komeyama.offline.chat.ui.fragment.CommunicationHistoryFragment"

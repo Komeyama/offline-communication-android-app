@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
@@ -20,8 +18,7 @@ import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.nearbyclient.ConnectionType
 import com.komeyama.offline.chat.ui.fragment.CommunicableUserListFragmentDirections
-import com.komeyama.offline.chat.ui.fragment.CommunicationHistoryListFragmentDirections
-import com.komeyama.offline.chat.ui.fragment.SettingFragmentDirections
+import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
@@ -60,27 +57,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set Back Button Action
-        app_back_button.setOnClickListener {
-            navController.navigateUp()
-        }
-
         // Set ViewModel
         (application as MainApplication).appComponent.injectionToMainActivity(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         binding.viewModel = viewModel
 
+        // Set Back Button Action
+        app_back_button.setOnClickListener {
+            Timber.d("tap app_back_button")
+            viewModel.transitionNavigator.showConfirmFinishCommunication()
+        }
+
         startNearbyClientWithPermissionCheck()
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
-    }
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Timber.d("onSupportNavigateUp")
+        Timber.d("tap onKeyDown")
+        viewModel.transitionNavigator.showConfirmFinishCommunication()
         viewModel.reStartNearbyClient()
         return super.onKeyDown(keyCode, event)
     }
@@ -97,7 +92,13 @@ class MainActivity : AppCompatActivity() {
             val user:ActiveUser = it.filterIsInstance<ActiveUser>()[0]
             val type = it.filterIsInstance<ConnectionType>()[0]
             if (type == ConnectionType.RECEIVER && user.id != "" && user.name != "" && user.endPointId != "") {
-                currentFragmentToConfirmAcceptanceDialog(user)
+                viewModel.communicationOpponentInfo =
+                    CommunicationOpponentInfo(
+                        user.id,
+                        user.name,
+                        user.endPointId
+                    )
+                viewModel.transitionNavigator.showConfirmAcceptanceDialog()
             }
         })
         viewModel.checkCommunicatedUserName()
@@ -118,43 +119,4 @@ class MainActivity : AppCompatActivity() {
             bottom_navigation.visibility = View.GONE
         }
     }
-
-    private fun currentFragmentToConfirmAcceptanceDialog(user: ActiveUser) {
-        when(currentFragment) {
-            R.id.CommunicableUserListFragment -> {
-                navController.navigate(
-                    CommunicableUserListFragmentDirections.
-                        actionCommunicableUserListFragmentToConfirmAcceptanceDialog(
-                            id = user.id,
-                            userName = user.name,
-                            endPointId = user.endPointId
-                        )
-                )
-            }
-            R.id.CommunicationHistoryListFragment -> {
-                navController.navigate(
-                    CommunicationHistoryListFragmentDirections.
-                        actionCommunicationHistoryListFragmentToConfirmAcceptanceDialog(
-                            id = user.id,
-                            userName = user.name,
-                            endPointId = user.endPointId
-                        )
-                )
-            }
-            R.id.SettingFragment ->{
-                navController.navigate(
-                    SettingFragmentDirections.
-                        actionSettingFragmentToConfirmAcceptanceDialog(
-                            id = user.id,
-                            userName = user.name,
-                            endPointId = user.endPointId
-                        )
-                )
-            }
-            else -> {
-                viewModel.rejectConnection(user.endPointId)
-            }
-        }
-    }
-
 }

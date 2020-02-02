@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
@@ -19,7 +20,13 @@ import kotlinx.android.synthetic.main.fragment_communicated.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class CommunicationHistoryFragment: Fragment() {
+class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
+    override fun showConfirmAcceptanceDialog() {}
+
+    override fun showConfirmFinishCommunication() {
+        Timber.d("tap showConfirmFinishCommunication on CommunicationHistoryFragment")
+        findNavController().navigateUp()
+    }
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -38,6 +45,7 @@ class CommunicationHistoryFragment: Fragment() {
 
         (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.transitionNavigator = this
 
         return inflater.inflate(R.layout.fragment_communicated, container, false)
     }
@@ -74,5 +82,4 @@ class CommunicationHistoryFragment: Fragment() {
             }
         })
     }
-
 }

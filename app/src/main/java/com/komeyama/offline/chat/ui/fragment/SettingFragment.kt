@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.ui.MainViewModel
 import javax.inject.Inject
 
-class SettingFragment :Fragment(){
+class SettingFragment :Fragment(), TransitionNavigator{
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -27,7 +28,21 @@ class SettingFragment :Fragment(){
 
         (activity?.application as MainApplication).appComponent.injectionToSettingFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.transitionNavigator = this
 
         return view
     }
+
+    override fun showConfirmAcceptanceDialog() {
+        findNavController().navigate(
+            SettingFragmentDirections.
+                actionSettingFragmentToConfirmAcceptanceDialog(
+                    id = viewModel.communicationOpponentInfo.id,
+                    userName = viewModel.communicationOpponentInfo.name,
+                    endPointId = viewModel.communicationOpponentInfo.endpointId
+                )
+        )
+    }
+
+    override fun showConfirmFinishCommunication() {}
 }

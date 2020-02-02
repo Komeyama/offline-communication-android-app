@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,13 +23,14 @@ import com.komeyama.offline.chat.ui.MainViewModel
 import timber.log.Timber
 import javax.inject.Inject
 
-class CommunicationHistoryListFragment: Fragment(){
+class CommunicationHistoryListFragment: Fragment(), TransitionNavigator{
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
     private lateinit var viewModel: MainViewModel
 
     private lateinit var viewModelAdapter: CommunicationHistoryListAdapter
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +48,12 @@ class CommunicationHistoryListFragment: Fragment(){
         )
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        viewModel.transitionNavigator = this
 
+        navController = findNavController()
         viewModelAdapter = CommunicationHistoryListAdapter(HistoryUserClick{
             Timber.d("click history item: %s",it)
-            findNavController().navigate(
+            navController.navigate(
                 CommunicationHistoryListFragmentDirections.actionCommunicationHistoryListFragmentToCommunicationHistoryFragment(
                     communicatedOpponentId = it.id,
                     communicatedOpponentName = it.name
@@ -79,6 +83,19 @@ class CommunicationHistoryListFragment: Fragment(){
         super.onDestroyView()
         viewModel.stopCheckCommunicatedUserName()
     }
+
+    override fun showConfirmAcceptanceDialog() {
+        navController.navigate(
+            CommunicationHistoryListFragmentDirections.
+                actionCommunicationHistoryListFragmentToConfirmAcceptanceDialog(
+                    id = viewModel.communicationOpponentInfo.id,
+                    userName = viewModel.communicationOpponentInfo.name,
+                    endPointId = viewModel.communicationOpponentInfo.endpointId
+                )
+        )
+    }
+
+    override fun showConfirmFinishCommunication() {}
 }
 
 class HistoryUserClick(val user:(HistoryUser) -> Unit) {

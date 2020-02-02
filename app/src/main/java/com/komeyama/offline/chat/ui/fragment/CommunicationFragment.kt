@@ -21,7 +21,12 @@ import kotlinx.android.synthetic.main.fragment_communication.*
 import javax.inject.Inject
 import timber.log.Timber
 
-class CommunicationFragment : Fragment() {
+class CommunicationFragment : Fragment(), TransitionNavigator {
+    override fun showConfirmAcceptanceDialog() {}
+    override fun showConfirmFinishCommunication() {
+        Timber.d("showConfirmFinishCommunication on CommunicationFragment")
+        findNavController().navigate(R.id.action_CommunicationFragment_to_confirmFinishCommunicationDialog)
+    }
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -43,6 +48,7 @@ class CommunicationFragment : Fragment() {
 
         (activity?.application as MainApplication).appComponent.injectionToCommunicationFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.transitionNavigator = this
 
         return inflater.inflate(R.layout.fragment_communication, container, false)
     }

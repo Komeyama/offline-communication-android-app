@@ -11,6 +11,7 @@ import com.komeyama.offline.chat.repository.CommunicatedUserRepository
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
 import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
+import com.komeyama.offline.chat.ui.fragment.TransitionNavigator
 import com.komeyama.offline.chat.util.createUserIdAndName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,13 +34,14 @@ class MainViewModel @Inject constructor(
     val connectingStatus = nearbyClient.connectingStatus
     val communicatedList = communicatedUserRepository.communicatedList
     private val _isExistUserInformation: MutableLiveData<Boolean> = MutableLiveData()
-    val isExistUserInformation:LiveData<Boolean>
+    val isExistUserInformation: LiveData<Boolean>
         get() = _isExistUserInformation
 
     val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
     val nameText: MutableLiveData<String> = MutableLiveData()
     lateinit var currentUserInformation: UserInformationEntities
     lateinit var communicationOpponentInfo: CommunicationOpponentInfo
+    lateinit var transitionNavigator: TransitionNavigator
 
     init {
         hasUserInformation()
@@ -110,6 +112,7 @@ class MainViewModel @Inject constructor(
          */
         Timber.d("set user name! %s", nameText.value.toString())
         createUserInformation(nameText.value.toString())
+        _isExistUserInformation.postValue(true)
         isCloseDialog.postValue(true)
     }
 
@@ -123,6 +126,10 @@ class MainViewModel @Inject constructor(
 
     fun rejectConnection(rejectEndpointId: String) {
         nearbyClient.rejectConnection(rejectEndpointId)
+    }
+
+    fun finishCommunication() {
+        nearbyClient.finishCommunication()
     }
 
     fun requestConnection(requestEndpointId: String) {
