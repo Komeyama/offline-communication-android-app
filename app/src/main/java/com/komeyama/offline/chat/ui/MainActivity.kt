@@ -3,6 +3,7 @@ package com.komeyama.offline.chat.ui
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -53,12 +54,18 @@ class MainActivity : AppCompatActivity() {
 
         // Set ViewModel
         (application as MainApplication).appComponent.injectionToMainActivity(this)
-        viewModel =  ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         binding.viewModel = viewModel
 
         startNearbyClientWithPermissionCheck()
 
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Timber.d("onSupportNavigateUp")
+        viewModel.reStartNearbyClient()
+        return super.onKeyDown(keyCode, event)
     }
 
     @NeedsPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)

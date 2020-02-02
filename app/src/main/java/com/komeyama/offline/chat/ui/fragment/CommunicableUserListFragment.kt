@@ -31,8 +31,6 @@ class CommunicableUserListFragment :Fragment(){
 
     private lateinit var viewModelAdapter: CommunicableUserListAdapter
 
-    private lateinit var communicationOpponentInfo: CommunicationOpponentInfo
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         (activity?.application as MainApplication).appComponent.injectionToCommunicableUserListFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
@@ -47,7 +45,7 @@ class CommunicableUserListFragment :Fragment(){
 
         viewModelAdapter =
             CommunicableUserListAdapter(ActiveUserClick {
-                communicationOpponentInfo =
+                viewModel.communicationOpponentInfo =
                     CommunicationOpponentInfo(
                         it.id,
                         it.name,
@@ -83,8 +81,8 @@ class CommunicableUserListFragment :Fragment(){
                 RequestResult.SUCCESS -> {
                     findNavController().navigate(
                         CommunicableUserListFragmentDirections.actionCommunicableUserListFragmentToCommunicationFragment(
-                            communicationOpponentId = communicationOpponentInfo.id,
-                            communicationOpponentName = communicationOpponentInfo.name
+                            communicationOpponentId = viewModel.communicationOpponentInfo.id,
+                            communicationOpponentName = viewModel.communicationOpponentInfo.name
                         )
                     )
                 }

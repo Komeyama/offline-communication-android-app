@@ -10,6 +10,7 @@ import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.repository.CommunicatedUserRepository
 import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
+import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
 import com.komeyama.offline.chat.util.createUserIdAndName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,6 +39,7 @@ class MainViewModel @Inject constructor(
     val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
     val nameText: MutableLiveData<String> = MutableLiveData()
     lateinit var currentUserInformation: UserInformationEntities
+    lateinit var communicationOpponentInfo: CommunicationOpponentInfo
 
     init {
         hasUserInformation()
@@ -109,6 +111,10 @@ class MainViewModel @Inject constructor(
         Timber.d("set user name! %s", nameText.value.toString())
         createUserInformation(nameText.value.toString())
         isCloseDialog.postValue(true)
+    }
+
+    fun reStartNearbyClient(){
+        nearbyClient.reStartNearbyClient()
     }
 
     fun acceptConnection(acceptEndpointId: String) {
