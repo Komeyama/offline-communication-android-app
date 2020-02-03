@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.komeyama.offline.chat.MainApplication
 import com.komeyama.offline.chat.R
+import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
+import com.komeyama.offline.chat.databinding.FragmentSettingBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.ui.MainViewModel
 import javax.inject.Inject
@@ -24,13 +27,21 @@ class SettingFragment :Fragment(), TransitionNavigator{
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_setting, container, false)
-
         (activity?.application as MainApplication).appComponent.injectionToSettingFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.transitionNavigator = this
 
-        return view
+        val binding: FragmentSettingBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_setting,
+            container,
+            false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        viewModel.transitionNavigator = this
+        binding.lifecycleOwner = this
+        viewModel.getUserName()
+
+        return binding.root
     }
 
     override fun showConfirmAcceptanceDialog() {

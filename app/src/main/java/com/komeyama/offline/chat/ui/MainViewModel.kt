@@ -41,6 +41,7 @@ class MainViewModel @Inject constructor(
         get() = _isExistUserInformation
     val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
     val nameText: MutableLiveData<String> = MutableLiveData<String>().apply { value = "" }
+    val editNameText: MutableLiveData<String> = MutableLiveData()
     lateinit var currentUserInformation: UserInformationEntities
     lateinit var communicationOpponentInfo: CommunicationOpponentInfo
     lateinit var transitionNavigator: TransitionNavigator
@@ -68,6 +69,7 @@ class MainViewModel @Inject constructor(
 
             if (isExist) {
                 currentUserInformation = userInformationService.getUserInformation()
+                nameText.postValue(currentUserInformation.userName)
                 startNearbyClient()
             }
         }
@@ -96,11 +98,18 @@ class MainViewModel @Inject constructor(
             return@switchMap selectedContents
         }
 
-    fun updateUserName(newUserName: String) {
+    fun getUserName() {
+        viewModelScope.launch {
+            editNameText.postValue(userInformationService.getUserInformation().userName)
+        }
+
+    }
+
+    fun updateUserName() {
         viewModelScope.launch {
             try {
                 val oldUserInformation = userInformationService.getUserInformation()
-                userInformationService.updateUserInformation(oldUserInformation.copy(userName = newUserName))
+                userInformationService.updateUserInformation(oldUserInformation.copy(userName = editNameText.value.toString()))
                 currentUserInformation = userInformationService.getUserInformation()
                 stopNearbyClient()
                 startNearbyClient()
