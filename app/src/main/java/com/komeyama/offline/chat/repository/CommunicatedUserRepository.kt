@@ -28,6 +28,10 @@ class CommunicatedUserRepository (
         dao.getCommunicatedUserList()
     }
 
+    suspend fun insertCommunicatedUser(historyUser: HistoryUser) = withContext(Dispatchers.IO) {
+        dao.insert(historyUser.asDomainModel())
+    }
+
     @SuppressLint("CheckResult")
     suspend fun checkUserName() {
         withContext(Dispatchers.IO) {
@@ -41,14 +45,11 @@ class CommunicatedUserRepository (
                         currentCommunicatedIds.add(it.communicatedUserId)
                     }
 
-                    if (!currentCommunicatedIds.contains(newHistoryUser.id) || currentCommunicatedIds.isEmpty()) {
-                        Timber.d("old communicated user id != old communicated user id")
-                        dao.insert(newHistoryUser.asDomainModel())
-                    } else {
+                    if (currentCommunicatedIds.contains(newHistoryUser.id)) {
                         Timber.d("old communicated user id == old communicated user id")
                         dao.updateDate(newHistoryUser.id, newHistoryUser.latestDate)
                     }
-            }
+                }
         }
     }
 

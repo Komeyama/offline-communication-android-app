@@ -77,7 +77,16 @@ class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
         })
     }
 
-    override fun showConfirmAcceptanceDialog() {}
+    override fun showConfirmAcceptanceDialog() {
+        findNavController().navigate(
+            CommunicationHistoryFragmentDirections.
+                actionCommunicationHistoryFragmentToConfirmAcceptanceDialog(
+                    id = viewModel.communicationOpponentInfo.id,
+                    userName = viewModel.communicationOpponentInfo.name,
+                    endPointId = viewModel.communicationOpponentInfo.endpointId
+                )
+        )
+    }
 
     override fun showConfirmFinishCommunication() {
         Timber.d("tap showConfirmFinishCommunication on CommunicationHistoryFragment")

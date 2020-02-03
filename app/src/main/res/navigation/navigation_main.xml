@@ -159,6 +159,9 @@
             android:name="communicatedOpponentName"
             app:argType="string"
             android:defaultValue="default" />
+        <action
+            android:id="@+id/action_communicationHistoryFragment_to_ConfirmAcceptanceDialog"
+            app:destination="@id/ConfirmAcceptanceDialog" />
     </fragment>
 
 </navigation>

@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.google.android.gms.nearby.connection.Strategy
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
+import com.komeyama.offline.chat.domain.HistoryUser
 import com.komeyama.offline.chat.domain.asNearbyMessage
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
@@ -14,6 +15,7 @@ import com.komeyama.offline.chat.service.UserInformationService
 import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
 import com.komeyama.offline.chat.ui.fragment.TransitionNavigator
 import com.komeyama.offline.chat.util.createUserIdAndName
+import com.komeyama.offline.chat.util.toDateString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -115,6 +117,29 @@ class MainViewModel @Inject constructor(
         _isExistUserInformation.postValue(true)
         isCloseDialog.postValue(true)
     }
+
+    fun insertCommunicatedUser() {
+        viewModelScope.launch {
+            try {
+                val currentCommunicatedIds: MutableSet<String> = mutableSetOf()
+                communicatedUserRepository.getCommunicatedUserList().map {
+                    currentCommunicatedIds.add(it.communicatedUserId)
+                }
+                Timber.d("currentCommunicatedIds: %s", currentCommunicatedIds)
+                Timber.d("communicationOpponentInfo: %s", communicationOpponentInfo)
+                if (!currentCommunicatedIds.contains(communicationOpponentInfo.id) || currentCommunicatedIds.isEmpty()){
+                    communicatedUserRepository.insertCommunicatedUser(
+                        HistoryUser(
+                            communicationOpponentInfo.id,
+                            communicationOpponentInfo.name,
+                            Date().toDateString()
+                        )
+                    )
+                }
+            } catch (error: IOException) {}
+        }
+    }
+
 
     fun reStartNearbyClient(){
         nearbyClient.reStartNearbyClient()

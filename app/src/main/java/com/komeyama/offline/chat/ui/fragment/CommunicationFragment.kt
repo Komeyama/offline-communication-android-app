@@ -44,6 +44,7 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
         (activity?.application as MainApplication).appComponent.injectionToCommunicationFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         viewModel.transitionNavigator = this
+        viewModel.insertCommunicatedUser()
 
         return inflater.inflate(R.layout.fragment_communication, container, false)
     }
