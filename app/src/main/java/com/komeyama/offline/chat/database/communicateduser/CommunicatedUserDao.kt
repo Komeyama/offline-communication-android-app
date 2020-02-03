@@ -10,8 +10,8 @@ interface CommunicatedUserDao {
     @Insert
     fun insert(communicatedUserEntities: CommunicatedUserEntities)
 
-    @Query("UPDATE communicated_user_entities SET latestDate=:date where communicatedUserId=:communicatedUserId")
-    fun updateDate(communicatedUserId:String, date:String)
+    @Query("UPDATE communicated_user_entities SET communicatedUserName=:name,latestDate=:date where communicatedUserId=:communicatedUserId")
+    fun updateDate(communicatedUserId:String, name:String, date:String)
 
     @Query("SELECT * FROM communicated_user_entities ORDER BY databaseId DESC")
     fun getCommunicatedUserListLiveData(): LiveData<List<CommunicatedUserEntities>>

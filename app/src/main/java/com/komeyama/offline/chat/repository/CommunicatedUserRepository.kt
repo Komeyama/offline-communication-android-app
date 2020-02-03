@@ -47,7 +47,7 @@ class CommunicatedUserRepository (
 
                     if (currentCommunicatedIds.contains(newHistoryUser.id)) {
                         Timber.d("old communicated user id == old communicated user id")
-                        dao.updateDate(newHistoryUser.id, newHistoryUser.latestDate)
+                        dao.updateDate(newHistoryUser.id, newHistoryUser.name, newHistoryUser.latestDate)
                     }
                 }
         }
