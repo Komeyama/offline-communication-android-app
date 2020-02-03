@@ -219,13 +219,20 @@ class NearbyClient @Inject constructor(
     private val endpointDiscoveryCallback = object: EndpointDiscoveryCallback() {
         override fun onEndpointFound(endpointId: String, info: DiscoveredEndpointInfo) {
             Timber.d("info: %s", info)
-            currentActiveUsrSet.add(
-                ActiveUser(
-                    info.endpointName.splitUserIdAndName().userId,
-                    info.endpointName.splitUserIdAndName().userName,
-                    endpointId)
-            )
-            _aroundEndpointInfo.postValue(currentActiveUsrSet.toList())
+            val currentUserId: MutableSet<String> = mutableSetOf()
+            currentActiveUsrSet.forEach {
+                currentUserId.add(it.id)
+            }
+            if (!currentUserId.contains(info.endpointName.splitUserIdAndName().userId) || currentActiveUsrSet.isEmpty()) {
+                currentActiveUsrSet.add(
+                    ActiveUser(
+                        info.endpointName.splitUserIdAndName().userId,
+                        info.endpointName.splitUserIdAndName().userName,
+                        endpointId)
+                )
+                _aroundEndpointInfo.postValue(currentActiveUsrSet.toList())
+            }
+
         }
 
         override fun onEndpointLost(endpointId: String) {
