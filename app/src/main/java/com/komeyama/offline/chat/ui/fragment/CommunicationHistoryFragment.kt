@@ -21,12 +21,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
-    override fun showConfirmAcceptanceDialog() {}
-
-    override fun showConfirmFinishCommunication() {
-        Timber.d("tap showConfirmFinishCommunication on CommunicationHistoryFragment")
-        findNavController().navigateUp()
-    }
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -81,5 +75,12 @@ class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
                 oldListSize = list.size
             }
         })
+    }
+
+    override fun showConfirmAcceptanceDialog() {}
+
+    override fun showConfirmFinishCommunication() {
+        Timber.d("tap showConfirmFinishCommunication on CommunicationHistoryFragment")
+        findNavController().navigateUp()
     }
 }

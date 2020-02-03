@@ -22,11 +22,6 @@ import javax.inject.Inject
 import timber.log.Timber
 
 class CommunicationFragment : Fragment(), TransitionNavigator {
-    override fun showConfirmAcceptanceDialog() {}
-    override fun showConfirmFinishCommunication() {
-        Timber.d("showConfirmFinishCommunication on CommunicationFragment")
-        findNavController().navigate(R.id.action_CommunicationFragment_to_confirmFinishCommunicationDialog)
-    }
 
     @Inject
     lateinit var viewModelFactory: MainViewModelFactory
@@ -103,6 +98,11 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
                 findNavController().navigate(R.id.action_CommunicationFragment_to_disconnectedMessageDialog)
             }
         })
+    }
 
+    override fun showConfirmAcceptanceDialog() {}
+    override fun showConfirmFinishCommunication() {
+        Timber.d("showConfirmFinishCommunication on CommunicationFragment")
+        findNavController().navigate(R.id.action_CommunicationFragment_to_confirmFinishCommunicationDialog)
     }
 }

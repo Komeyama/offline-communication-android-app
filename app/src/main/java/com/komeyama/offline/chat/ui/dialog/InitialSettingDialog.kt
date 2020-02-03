@@ -44,6 +44,7 @@ class InitialSettingDialog : DialogFragment(){
         (activity?.application as MainApplication).appComponent.injectionToInitialSettingDialog(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         viewModel.isCloseDialog.observe(viewLifecycleOwner, Observer<Boolean> {
             if(it){

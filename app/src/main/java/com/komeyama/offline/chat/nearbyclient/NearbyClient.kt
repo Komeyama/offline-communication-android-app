@@ -94,7 +94,6 @@ class NearbyClient @Inject constructor(
 
     fun finishCommunication() {
         connectionsClient.stopAllEndpoints()
-        _connectingStatus.postValue(ConnectingStatus.NOT_CONNECTING)
         _connectedOpponentUserInfo.onNext(currentOpponentInfo)
         resetCommunication()
     }
