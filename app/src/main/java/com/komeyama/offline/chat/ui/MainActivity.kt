@@ -4,7 +4,9 @@ import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.Menu
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -24,6 +26,9 @@ import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
 import javax.inject.Inject
+
+
+
 
 @RuntimePermissions
 class MainActivity : AppCompatActivity() {
@@ -63,7 +68,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        //Set Toolbar
+        val toolbar = toolbar as Toolbar
+        toolbar.title = ""
+
         // Set Back Button Action
+        setSupportActionBar(toolbar)
+
         app_back_button.setOnClickListener {
             Timber.d("tap app_back_button")
             viewModel.transitionNavigator.showConfirmFinishCommunication()
@@ -71,6 +82,13 @@ class MainActivity : AppCompatActivity() {
 
         startNearbyClientWithPermissionCheck()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.toolbar_navigation, menu)
+        return true
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
