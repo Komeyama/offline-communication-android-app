@@ -1,9 +1,12 @@
 package com.komeyama.offline.chat.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +17,7 @@ import com.komeyama.offline.chat.databinding.FragmentCommunicableUserListBinding
 import com.komeyama.offline.chat.databinding.FragmentSettingBinding
 import com.komeyama.offline.chat.di.MainViewModelFactory
 import com.komeyama.offline.chat.ui.MainViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class SettingFragment :Fragment(), TransitionNavigator{
@@ -41,7 +45,25 @@ class SettingFragment :Fragment(), TransitionNavigator{
         binding.lifecycleOwner = this
         viewModel.getUserName()
 
+        binding.root.setOnClickListener {
+            closeKeyBoardAndGetFocus(binding, it)
+        }
+
+        binding.settingSaveButton.setOnClickListener {
+            closeKeyBoardAndGetFocus(binding, it)
+            viewModel.updateUserName()
+            Toast.makeText(context , R.string.setting_saved_toast_massage, Toast.LENGTH_SHORT).show()
+        }
+
         return binding.root
+    }
+
+    private fun closeKeyBoardAndGetFocus(binding: FragmentSettingBinding, view: View) {
+        binding.focusGetDummyView.requestFocus()
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.apply {
+            this.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
     }
 
     override fun showConfirmAcceptanceDialog() {
