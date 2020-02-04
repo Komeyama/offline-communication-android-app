@@ -1,9 +1,11 @@
 package com.komeyama.offline.chat.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -93,10 +95,16 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
             true
         }
 
+        messagesList?.setOnTouchListener { v, event ->
+            closeKeyBoardAndGetFocus(v)
+            v?.onTouchEvent(event) ?: true
+        }
+
         viewModel.connectingStatus.observe(viewLifecycleOwner, Observer {
             Timber.d("connectingStatus:%s", it)
             if (it == ConnectingStatus.LOST) {
                 findNavController().navigate(R.id.action_CommunicationFragment_to_disconnectedMessageDialog)
+                closeKeyBoardAndGetFocus(view!!)
             }
         })
     }
@@ -105,5 +113,14 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
     override fun showConfirmFinishCommunication() {
         Timber.d("showConfirmFinishCommunication on CommunicationFragment")
         findNavController().navigate(R.id.action_CommunicationFragment_to_confirmFinishCommunicationDialog)
+        closeKeyBoardAndGetFocus(view!!)
+    }
+
+    private fun closeKeyBoardAndGetFocus(view: View) {
+        focus_get_chat_view.requestFocus()
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.apply {
+            this.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
     }
 }
