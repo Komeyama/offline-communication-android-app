@@ -26,4 +26,7 @@
     <string name="toolbar_title_history_communication">History</string>
     <string name="toolbar_title_setting">Setting</string>
     <string name="toolbar_title_licenses">Licenses</string>
+    <string name="bottom_chat_title">Chat</string>
+    <string name="bottom_history_title">History</string>
+    <string name="bottom_setting_title">Setting</string>
 </resources>

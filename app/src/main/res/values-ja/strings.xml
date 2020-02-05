@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">offline-communication-android-app</string>
+    <string name="setting_account_name">名前</string>
+    <string name="confirm_acceptance_dialog_title">呼び出し</string>
+    <string name="confirm_acceptance_dialog_message">こちらの人からコールです。</string>
+    <string name="confirm_acceptance_dialog_ok">受け入れる</string>
+    <string name="confirm_acceptance_dialog_ng">拒否する</string>
+    <string name="confirm_request_dialog_title">確認</string>
+    <string name="confirm_request_dialog_message">こちらの人と会話しますか?</string>
+    <string name="confirm_request_dialog_ok">はい</string>
+    <string name="confirm_request_dialog_ng">いいえ</string>
+    <string name="confirm_finish_communication">この会話を終了しますか?</string>
+    <string name="disconnected_message_dialog_message">相手の端末との接続が切断されました</string>
+    <string name="initial_note">こちらにあなたの名前を入力してください.\n※あとで変更できます。</string>
+    <string name="initial_hint">your name</string>
+    <string name="initial_ok">OK</string>
+    <string name="setting_save">保存</string>
+    <string name="setting_saved_toast_massage">名前を変更しました</string>
+    <string name="item_user_icon_name">user icon</string>
+    <string name="item_history_time">0000/00/00 00:00</string>
+    <string name="toolbar_title"></string>
+    <string name="toolbar_back_button">back button</string>
+    <string name="toolbar_title_active_user_list">接続可能一覧</string>
+    <string name="toolbar_title_communication">会話中</string>
+    <string name="toolbar_title_history_user_list">履歴</string>
+    <string name="toolbar_title_history_communication">履歴</string>
+    <string name="toolbar_title_setting">設定</string>
+    <string name="toolbar_title_licenses">ライセンス</string>
+    <string name="bottom_chat_title">会話</string>
+    <string name="bottom_history_title">履歴</string>
+    <string name="bottom_setting_title">設定</string>
+</resources>

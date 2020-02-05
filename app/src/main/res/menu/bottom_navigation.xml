@@ -4,14 +4,14 @@
     <item
         android:id="@+id/CommunicableUserListFragment"
         android:icon="@drawable/ic_chat_black_24dp"
-        android:title="Chat"/>
+        android:title="@string/bottom_chat_title"/>
     <item
         android:id="@+id/CommunicationHistoryListFragment"
         android:icon="@drawable/ic_history_black_24dp"
-        android:title="History"/>
+        android:title="@string/bottom_history_title"/>
     <item
         android:id="@+id/SettingFragment"
         android:icon="@drawable/ic_settings_black_24dp"
-        android:title="Setting"/>
+        android:title="@string/bottom_setting_title"/>
 
 </menu>
