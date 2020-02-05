@@ -43,6 +43,7 @@ class SettingFragment :Fragment(), TransitionNavigator{
         binding.viewModel = viewModel
         viewModel.transitionNavigator = this
         binding.lifecycleOwner = this
+        binding.focusGetDummyView.requestFocus()
         viewModel.getUserName()
         viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_setting))
 

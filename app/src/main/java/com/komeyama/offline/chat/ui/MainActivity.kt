@@ -47,26 +47,6 @@ class MainActivity : AppCompatActivity() {
         // Set BottomNavigation
         navController = findNavController(R.id.nav_host_fragment)
         setupWithNavController(bottom_navigation, navController)
-        navController.addOnDestinationChangedListener{ _ , destination , _ ->
-            currentFragment = destination.id
-
-            setVisibilityOfBottomNavigation(true)
-            app_back_button.visibility = View.GONE
-            menuItem?.isVisible = false
-
-            when (currentFragment) {
-                R.id.CommunicationFragment, R.id.communicationHistoryFragment -> {
-                    setVisibilityOfBottomNavigation(false)
-                    app_back_button.visibility = View.VISIBLE
-                }
-                R.id.SettingFragment -> {
-                    menuItem?.isVisible = true
-                }
-                R.id.licenseFragment -> {
-                    app_back_button.visibility = View.VISIBLE
-                }
-            }
-        }
 
         // Set ViewModel
         (application as MainApplication).appComponent.injectionToMainActivity(this)
@@ -90,6 +70,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     *  onCreateOptionsMenu is called after onResume. (called last in this activity)
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
@@ -100,7 +83,28 @@ class MainActivity : AppCompatActivity() {
             viewModel.transitionNavigator.tapFirstItemOfMenuList()
             true
         }
-        menuItem?.isVisible = false
+
+        navController.addOnDestinationChangedListener{ _ , destination , _ ->
+            currentFragment = destination.id
+
+            setVisibilityOfBottomNavigation(true)
+            app_back_button.visibility = View.GONE
+            menuItem?.isVisible = false
+
+            when (currentFragment) {
+                R.id.CommunicationFragment, R.id.communicationHistoryFragment -> {
+                    setVisibilityOfBottomNavigation(false)
+                    app_back_button.visibility = View.VISIBLE
+                }
+                R.id.SettingFragment -> {
+                    menuItem?.isVisible = true
+                }
+                R.id.licenseFragment -> {
+                    app_back_button.visibility = View.VISIBLE
+                }
+            }
+        }
+
         return true
     }
 
