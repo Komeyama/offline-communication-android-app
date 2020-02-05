@@ -1,1 +1,5 @@
-# offline-communication-android-app
+offline-communication-android-app
+====
+
+## License
+MIT
