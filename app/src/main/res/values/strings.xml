@@ -18,4 +18,5 @@
     <string name="setting_saved_toast_massage">The name has changed</string>
     <string name="item_user_icon_name">user icon</string>
     <string name="item_history_time">0000/00/00 00:00</string>
+    <string name="toolbar_title"></string>
 </resources>

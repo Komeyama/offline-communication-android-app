@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
@@ -27,9 +28,6 @@ import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
 import javax.inject.Inject
 
-
-
-
 @RuntimePermissions
 class MainActivity : AppCompatActivity() {
 
@@ -37,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var navController: NavController
     private var currentFragment = R.id.CommunicableUserListFragment
+    private var menuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,14 +49,18 @@ class MainActivity : AppCompatActivity() {
         setupWithNavController(bottom_navigation, navController)
         navController.addOnDestinationChangedListener{ _ , destination , _ ->
             currentFragment = destination.id
+
+            setVisibilityOfBottomNavigation(true)
+            app_back_button.visibility = View.GONE
+            menuItem?.isVisible = false
+
             when (currentFragment) {
                 R.id.CommunicationFragment, R.id.communicationHistoryFragment -> {
                     setVisibilityOfBottomNavigation(false)
                     app_back_button.visibility = View.VISIBLE
                 }
-                else -> {
-                    setVisibilityOfBottomNavigation(true)
-                    app_back_button.visibility = View.GONE
+                R.id.SettingFragment -> {
+                    menuItem?.isVisible = true
                 }
             }
         }
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         //Set Toolbar
         val toolbar = toolbar as Toolbar
-        toolbar.title = ""
+        toolbar.title = getString(R.string.toolbar_title)
 
         // Set Back Button Action
         setSupportActionBar(toolbar)
@@ -88,6 +91,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(menu)
         val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_navigation, menu)
+        menuItem = menu?.getItem(0)
+        menuItem?.setOnMenuItemClickListener {
+            Timber.d("menu: %s", it)
+            true
+        }
+        menuItem?.isVisible = false
         return true
     }
 
