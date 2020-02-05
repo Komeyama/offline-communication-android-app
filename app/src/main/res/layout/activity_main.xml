@@ -20,7 +20,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             app:titleTextColor="#FFFFFF"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/toolbar_gradation"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="7.5dp"
