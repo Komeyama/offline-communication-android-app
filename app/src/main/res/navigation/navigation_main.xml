@@ -53,6 +53,10 @@
             android:id="@+id/action_SettingFragment_to_ConfirmAcceptanceDialog"
             app:destination="@+id/ConfirmAcceptanceDialog"
             app:popUpTo="@+id/SettingFragment" />
+        <action
+            android:id="@+id/action_SettingFragment_to_licenseFragment"
+            app:destination="@id/licenseFragment"
+            app:popUpTo="@+id/SettingFragment" />
     </fragment>
 
     <fragment
@@ -161,6 +165,14 @@
             android:defaultValue="default" />
         <action
             android:id="@+id/action_communicationHistoryFragment_to_ConfirmAcceptanceDialog"
+            app:destination="@id/ConfirmAcceptanceDialog" />
+    </fragment>
+    <fragment
+        android:id="@+id/licenseFragment"
+        android:name="com.komeyama.offline.chat.ui.fragment.LicenseFragment"
+        android:label="LicenseFragment" >
+        <action
+            android:id="@+id/action_licenseFragment_to_ConfirmAcceptanceDialog"
             app:destination="@id/ConfirmAcceptanceDialog" />
     </fragment>
 

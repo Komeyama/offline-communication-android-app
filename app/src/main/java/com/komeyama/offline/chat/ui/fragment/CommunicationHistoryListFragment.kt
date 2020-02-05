@@ -95,7 +95,8 @@ class CommunicationHistoryListFragment: Fragment(), TransitionNavigator{
         )
     }
 
-    override fun showConfirmFinishCommunication() {}
+    override fun tapBackButtonOfToolbar() {}
+    override fun tapFirstItemOfMenuList() {}
 }
 
 class HistoryUserClick(val user:(HistoryUser) -> Unit) {

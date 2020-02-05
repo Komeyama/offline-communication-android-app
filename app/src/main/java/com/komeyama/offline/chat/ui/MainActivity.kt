@@ -62,6 +62,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.SettingFragment -> {
                     menuItem?.isVisible = true
                 }
+                R.id.licenseFragment -> {
+                    app_back_button.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -80,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
         app_back_button.setOnClickListener {
             Timber.d("tap app_back_button")
-            viewModel.transitionNavigator.showConfirmFinishCommunication()
+            viewModel.transitionNavigator.tapBackButtonOfToolbar()
         }
 
         startNearbyClientWithPermissionCheck()
@@ -94,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         menuItem = menu?.getItem(0)
         menuItem?.setOnMenuItemClickListener {
             Timber.d("menu: %s", it)
+            viewModel.transitionNavigator.tapFirstItemOfMenuList()
             true
         }
         menuItem?.isVisible = false
@@ -102,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         Timber.d("tap onKeyDown")
-        viewModel.transitionNavigator.showConfirmFinishCommunication()
+        viewModel.transitionNavigator.tapBackButtonOfToolbar()
         viewModel.reStartNearbyClient()
         return super.onKeyDown(keyCode, event)
     }

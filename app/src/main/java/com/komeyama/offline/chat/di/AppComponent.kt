@@ -44,6 +44,8 @@ interface AppComponent {
 
     fun injectionToInitialSettingDialog(fragment: InitialSettingDialog)
 
+    fun injectionToLicenseFragment(fragment: LicenseFragment)
+
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance application:Application): AppComponent

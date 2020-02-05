@@ -88,8 +88,9 @@ class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
         )
     }
 
-    override fun showConfirmFinishCommunication() {
+    override fun tapBackButtonOfToolbar() {
         Timber.d("tap showConfirmFinishCommunication on CommunicationHistoryFragment")
         findNavController().navigateUp()
     }
+    override fun tapFirstItemOfMenuList() {}
 }

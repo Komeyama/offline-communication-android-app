@@ -110,11 +110,12 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
     }
 
     override fun showConfirmAcceptanceDialog() {}
-    override fun showConfirmFinishCommunication() {
+    override fun tapBackButtonOfToolbar() {
         Timber.d("showConfirmFinishCommunication on CommunicationFragment")
         findNavController().navigate(R.id.action_CommunicationFragment_to_confirmFinishCommunicationDialog)
         closeKeyBoardAndGetFocus(view!!)
     }
+    override fun tapFirstItemOfMenuList() {}
 
     private fun closeKeyBoardAndGetFocus(view: View) {
         focus_get_chat_view.requestFocus()

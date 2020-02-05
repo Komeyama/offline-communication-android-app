@@ -77,5 +77,9 @@ class SettingFragment :Fragment(), TransitionNavigator{
         )
     }
 
-    override fun showConfirmFinishCommunication() {}
+    override fun tapBackButtonOfToolbar() {}
+
+    override fun tapFirstItemOfMenuList() {
+        findNavController().navigate(R.id.action_SettingFragment_to_licenseFragment)
+    }
 }

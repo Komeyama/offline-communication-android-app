@@ -108,7 +108,8 @@ class CommunicableUserListFragment :Fragment(), TransitionNavigator{
         )
     }
 
-    override fun showConfirmFinishCommunication() {}
+    override fun tapBackButtonOfToolbar() {}
+    override fun tapFirstItemOfMenuList() {}
 
 }
 
