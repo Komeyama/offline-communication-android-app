@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">offline-communication-android-app</string>
+    <string name="app_name">Covertly</string>
     <string name="setting_account_name">名前</string>
     <string name="confirm_acceptance_dialog_title">呼び出し</string>
     <string name="confirm_acceptance_dialog_message">こちらの人からコールです。</string>
