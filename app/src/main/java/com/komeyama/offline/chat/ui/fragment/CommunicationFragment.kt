@@ -47,6 +47,7 @@ class CommunicationFragment : Fragment(), TransitionNavigator {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         viewModel.transitionNavigator = this
         viewModel.insertCommunicatedUser()
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_communication))
 
         return inflater.inflate(R.layout.fragment_communication, container, false)
     }

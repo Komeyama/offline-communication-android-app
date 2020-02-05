@@ -1,7 +1,6 @@
 package com.komeyama.offline.chat.ui
 
 import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 import com.google.android.gms.nearby.connection.Strategy
 import com.komeyama.offline.chat.database.userinfo.UserInformationEntities
 import com.komeyama.offline.chat.domain.CommunicationContent
@@ -42,6 +41,7 @@ class MainViewModel @Inject constructor(
     val isCloseDialog: MutableLiveData<Boolean> = MutableLiveData()
     val nameText: MutableLiveData<String> = MutableLiveData<String>().apply { value = "" }
     val editNameText: MutableLiveData<String> = MutableLiveData()
+    val toolbarTitleText: MutableLiveData<String> = MutableLiveData<String>().apply { value = "" }
     lateinit var currentUserInformation: UserInformationEntities
     lateinit var communicationOpponentInfo: CommunicationOpponentInfo
     lateinit var transitionNavigator: TransitionNavigator

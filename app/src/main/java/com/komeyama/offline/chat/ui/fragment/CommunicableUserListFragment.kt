@@ -69,6 +69,8 @@ class CommunicableUserListFragment :Fragment(), TransitionNavigator{
             adapter = viewModelAdapter
         }
 
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_active_user_list))
+
         return binding.root
     }
 

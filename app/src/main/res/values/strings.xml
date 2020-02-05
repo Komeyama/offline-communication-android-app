@@ -19,4 +19,11 @@
     <string name="item_user_icon_name">user icon</string>
     <string name="item_history_time">0000/00/00 00:00</string>
     <string name="toolbar_title"></string>
+    <string name="toolbar_back_button">back button</string>
+    <string name="toolbar_title_active_user_list">Active Users</string>
+    <string name="toolbar_title_communication">communicating</string>
+    <string name="toolbar_title_history_user_list">History</string>
+    <string name="toolbar_title_history_communication">History</string>
+    <string name="toolbar_title_setting">Setting</string>
+    <string name="toolbar_title_licenses">Licenses</string>
 </resources>

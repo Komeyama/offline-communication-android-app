@@ -40,6 +40,7 @@ class CommunicationHistoryFragment: Fragment(), TransitionNavigator {
         (activity?.application as MainApplication).appComponent.injectionToCommunicationHistoryFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         viewModel.transitionNavigator = this
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_history_communication))
 
         return inflater.inflate(R.layout.fragment_communicated, container, false)
     }

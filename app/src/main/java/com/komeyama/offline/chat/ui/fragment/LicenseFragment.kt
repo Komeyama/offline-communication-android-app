@@ -30,6 +30,7 @@ class LicenseFragment: Fragment(), TransitionNavigator{
         (activity?.application as MainApplication).appComponent.injectionToLicenseFragment(this)
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory).get(MainViewModel::class.java)
         viewModel.transitionNavigator = this
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_licenses))
 
         return inflater.inflate(R.layout.fragment_license, container, false)
     }

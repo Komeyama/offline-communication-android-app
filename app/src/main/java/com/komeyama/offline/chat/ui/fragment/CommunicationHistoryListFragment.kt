@@ -49,6 +49,7 @@ class CommunicationHistoryListFragment: Fragment(), TransitionNavigator{
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         viewModel.transitionNavigator = this
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_history_user_list))
 
         navController = findNavController()
         viewModelAdapter = CommunicationHistoryListAdapter(HistoryUserClick{

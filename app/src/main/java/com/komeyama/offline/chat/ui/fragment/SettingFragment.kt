@@ -44,6 +44,7 @@ class SettingFragment :Fragment(), TransitionNavigator{
         viewModel.transitionNavigator = this
         binding.lifecycleOwner = this
         viewModel.getUserName()
+        viewModel.toolbarTitleText.postValue(getString(R.string.toolbar_title_setting))
 
         binding.root.setOnClickListener {
             closeKeyBoardAndGetFocus(binding, it)
