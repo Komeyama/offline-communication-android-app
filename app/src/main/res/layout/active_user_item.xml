@@ -51,6 +51,7 @@
             android:layout_marginStart="10dp"
             android:textColor="@color/text_black"
             android:text="@{userList.name}"
+            android:fontFamily="@font/notosans_regular"
             app:layout_constraintEnd_toStartOf="@+id/right_well"
             app:layout_constraintStart_toEndOf="@+id/active_user_icon"
             app:layout_constraintTop_toTopOf="parent"
