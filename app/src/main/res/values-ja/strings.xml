@@ -11,7 +11,7 @@
     <string name="confirm_request_dialog_ng">いいえ</string>
     <string name="confirm_finish_communication">この会話を終了しますか?</string>
     <string name="disconnected_message_dialog_message">相手の端末との接続が切断されました</string>
-    <string name="initial_note">こちらにあなたの名前を入力してください.\n※あとで変更できます。</string>
+    <string name="initial_note">あなたの名前を入力してください.\n※あとで変更できます。</string>
     <string name="initial_hint">your name</string>
     <string name="initial_ok">OK</string>
     <string name="setting_save">保存</string>
