@@ -72,3 +72,8 @@ class Author(private val id:String,
         return avatar
     }
 }
+
+enum class LanguageType {
+    ENGLISH,
+    JAPANESE
+}

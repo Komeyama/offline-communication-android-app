@@ -13,6 +13,7 @@ import com.komeyama.offline.chat.repository.CommunicationRepository
 import com.komeyama.offline.chat.service.UserInformationService
 import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
 import com.komeyama.offline.chat.ui.fragment.TransitionNavigator
+import com.komeyama.offline.chat.util.LanguageType
 import com.komeyama.offline.chat.util.createUserIdAndName
 import com.komeyama.offline.chat.util.toDateString
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +46,7 @@ class MainViewModel @Inject constructor(
     lateinit var currentUserInformation: UserInformationEntities
     lateinit var communicationOpponentInfo: CommunicationOpponentInfo
     lateinit var transitionNavigator: TransitionNavigator
+    val languageType: MutableLiveData<LanguageType> = MutableLiveData<LanguageType>().apply { value = LanguageType.ENGLISH }
 
     init {
         hasUserInformation()

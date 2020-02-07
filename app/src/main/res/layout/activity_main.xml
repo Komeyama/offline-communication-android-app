@@ -7,6 +7,7 @@
     <data>
         <import type="android.view.View"/>
         <import type="com.komeyama.offline.chat.nearbyclient.RequestResult"/>
+        <import type="com.komeyama.offline.chat.util.LanguageType"/>
 
         <variable
             name="viewModel"
@@ -42,7 +43,7 @@
                 android:textSize="20sp"
                 android:text="@{viewModel.toolbarTitleText}"
                 android:textColor="@color/text_white"
-                android:fontFamily="@font/notosans_italic"
+                app:familyFont="@{viewModel.languageType == LanguageType.JAPANESE ? @string/notosansjp_medium : @string/notosans_italic}"
                 style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
         </androidx.appcompat.widget.Toolbar>

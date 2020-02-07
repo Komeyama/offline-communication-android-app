@@ -22,10 +22,12 @@ import com.komeyama.offline.chat.domain.ActiveUser
 import com.komeyama.offline.chat.nearbyclient.ConnectionType
 import com.komeyama.offline.chat.ui.fragment.CommunicableUserListFragmentDirections
 import com.komeyama.offline.chat.ui.fragment.CommunicationOpponentInfo
+import com.komeyama.offline.chat.util.LanguageType
 import kotlinx.android.synthetic.main.activity_main.*
 import permissions.dispatcher.NeedsPermission
 import permissions.dispatcher.RuntimePermissions
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @RuntimePermissions
@@ -53,6 +55,11 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
 
         binding.viewModel = viewModel
+
+        // Set Font according to language
+        if (Regex(Locale.getDefault().language).containsMatchIn("ja")) {
+            viewModel.languageType.postValue(LanguageType.JAPANESE)
+        }
 
         //Set Toolbar
         val toolbar = toolbar as Toolbar
