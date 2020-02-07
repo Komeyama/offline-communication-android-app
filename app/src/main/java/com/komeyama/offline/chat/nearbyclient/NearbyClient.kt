@@ -53,7 +53,7 @@ class NearbyClient @Inject constructor(
     private var connectionType: ConnectionType = ConnectionType.RECEIVER
     private var currentMyselfUserIdAndName : String = ""
     private var connectedEndpointId: String = ""
-    private lateinit var currentOpponentInfo: HistoryUser
+    private var currentOpponentInfo: HistoryUser = HistoryUser("", "", Date().toDateString())
 
     // live data
     private val _aroundEndpointInfo: MutableLiveData<List<ActiveUser>> = MutableLiveData()

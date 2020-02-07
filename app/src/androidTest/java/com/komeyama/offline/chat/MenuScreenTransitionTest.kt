@@ -25,6 +25,8 @@ import androidx.test.rule.ActivityTestRule
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.komeyama.offline.chat.nearbyclient.ConnectionType
 import com.komeyama.offline.chat.nearbyclient.RequestResult
+import com.komeyama.offline.chat.service.UserInformationService
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Rule
 import java.util.concurrent.TimeUnit
@@ -44,6 +46,7 @@ class MenuScreenTransitionTest {
 
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
+    @Inject lateinit var userInformationService: UserInformationService
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var invitedEndpointInfo: MutableLiveData<Iterable<*>>
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
@@ -73,32 +76,50 @@ class MenuScreenTransitionTest {
 
     @Test
     fun runApp() {
+        var isExistUserInformation = false
+        runBlocking {
+            isExistUserInformation = userInformationService.existsUserInformation()
+        }
+        if (!isExistUserInformation) {
+            onView(withId(R.id.initial_name_editor)).perform(ViewActions.typeText("komeyama"), ViewActions.closeSoftKeyboard())
+            onView(withId(R.id.initial_name_decision)).perform(click())
+        }
+
         val settingFragmentId = bottomNavigationView.menu.findItem(R.id.SettingFragment).itemId
         onView(withId(settingFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
-        waitNextProcess(2)
+        waitNextProcess(1)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
         onView(isRoot()).perform(ViewActions.pressBack())
+        waitNextProcess(1)
+        onView(withId(android.R.id.button1)).perform(click())
+        waitNextProcess(1)
 
         val communicationHistoryListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicationHistoryListFragment).itemId
         onView(withId(communicationHistoryListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
-        waitNextProcess(2)
+        waitNextProcess(1)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
         onView(isRoot()).perform(ViewActions.pressBack())
+        waitNextProcess(1)
+        onView(withId(android.R.id.button1)).perform(click())
+        waitNextProcess(1)
 
         val communicableUserListFragmentId = bottomNavigationView.menu.findItem(R.id.CommunicableUserListFragment).itemId
         onView(withId(communicableUserListFragmentId)).perform(click())
         countingTaskExecutorRule.drainTasks(3, TimeUnit.SECONDS)
         invitedEndpointInfo.postValue(listOf(ActiveUser("12345a", "nearby test0", "dummy0"),ConnectionType.RECEIVER))
-        waitNextProcess(2)
+        waitNextProcess(1)
         onView(withId(android.R.id.button1)).perform(click())
         waitNextProcess(1)
         onView(isRoot()).perform(ViewActions.pressBack())
+        waitNextProcess(1)
+        onView(withId(android.R.id.button1)).perform(click())
+        waitNextProcess(1)
 
         val currentActiveUsrList = mutableListOf<ActiveUser>()
         currentActiveUsrList.add(

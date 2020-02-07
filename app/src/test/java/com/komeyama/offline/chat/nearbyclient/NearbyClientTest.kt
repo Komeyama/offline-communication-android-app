@@ -102,9 +102,9 @@ class NearbyClientTest {
             "hello world")
          print("Date().toDateString(): " + Date().toDateString())
 
-        val createSendPayload = NearbyClient::class.java.getDeclaredMethod("createSendPayload", CommunicationContent::class.java, String::class.java)
+        val createSendPayload = NearbyClient::class.java.getDeclaredMethod("createSendPayload", CommunicationContent::class.java)
         createSendPayload.isAccessible = true
-        val payload = createSendPayload.invoke(nearbyClient, communicationContent, "endpointId")
+        val payload = createSendPayload.invoke(nearbyClient, communicationContent)
         val createReceiveNearbyCommunicationContent = NearbyClient::class.java.getDeclaredMethod("createReceiveNearbyCommunicationContent", Payload::class.java)
         createReceiveNearbyCommunicationContent.isAccessible = true
         assertEquals(

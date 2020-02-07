@@ -85,7 +85,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clickable="true"
-                android:visibility="@{viewModel.requestResult == RequestResult.LOADING ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{viewModel.requestResult == RequestResult.LOADING ? View.VISIBLE : View.GONE}"
+                android:focusable="true" />
 
         </FrameLayout>
 

@@ -19,8 +19,10 @@ import com.komeyama.offline.chat.nearbyclient.ConnectingStatus
 import com.komeyama.offline.chat.nearbyclient.NearbyClient
 import com.komeyama.offline.chat.nearbyclient.NearbyCommunicationContent
 import com.komeyama.offline.chat.nearbyclient.RequestResult
+import com.komeyama.offline.chat.service.UserInformationService
 import com.komeyama.offline.chat.ui.MainActivity
 import com.komeyama.offline.chat.util.toDateString
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -39,10 +41,10 @@ class CommunicationScreenTest {
     @Rule
     @JvmField
     val countingTaskExecutorRule = CountingTaskExecutorRule()
-
     private var confirmUiDesign = true
     private lateinit var testAppComponent: TestAppComponent
     @Inject lateinit var nearbyClient: NearbyClient
+    @Inject lateinit var userInformationService: UserInformationService
     private lateinit var aroundEndpointInfo: MutableLiveData<List<ActiveUser>>
     private lateinit var requestResult: MutableLiveData<RequestResult>
     private lateinit var connectingStatus: MutableLiveData<ConnectingStatus>
@@ -71,6 +73,18 @@ class CommunicationScreenTest {
 
     @Test
     fun runApp() {
+        var isExistUserInformation = false
+        runBlocking {
+            isExistUserInformation = userInformationService.existsUserInformation()
+        }
+        if (!isExistUserInformation) {
+            Espresso.onView(ViewMatchers.withId(R.id.initial_name_editor))
+                .perform(ViewActions.typeText("komeyama"), ViewActions.closeSoftKeyboard())
+            Espresso.onView(ViewMatchers.withId(R.id.initial_name_decision))
+                .perform(ViewActions.click())
+        }
+
+
         val currentActiveUsrList = mutableListOf<ActiveUser>()
         currentActiveUsrList.add(
             ActiveUser("12345a", "nearby test0", "dummy0")
