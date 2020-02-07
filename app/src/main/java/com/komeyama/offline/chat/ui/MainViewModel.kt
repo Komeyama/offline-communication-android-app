@@ -118,9 +118,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun setUserName() {
-        /**
-         * Todo: add "text validation"
-         */
         Timber.d("set user name! %s", nameText.value.toString())
         createUserInformation(nameText.value.toString())
         _isExistUserInformation.postValue(true)

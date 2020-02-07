@@ -123,10 +123,7 @@ class NearbyClient @Inject constructor(
                 Timber.d("failure requestConnection!")
                 _requestResult.postValue(RequestResult.CANCELED)
                 reStartNearbyClient()
-            /**
-             * Todo: Add failure message trigger
-             */
-        }
+            }
     }
 
     fun sendPayload(communicationContent: CommunicationContent) {
@@ -151,9 +148,6 @@ class NearbyClient @Inject constructor(
             Timber.d("success startAdvertising!")
         }.addOnFailureListener {
             Timber.d("failure startAdvertising!")
-            /**
-             * Todo: Add retry process
-             */
         }
     }
 
@@ -167,9 +161,6 @@ class NearbyClient @Inject constructor(
             Timber.d("success startDiscovery!")
         }.addOnFailureListener {
             Timber.d("failure startDiscovery!")
-            /**
-             * Todo: Add retry process
-             */
         }
     }
 
