@@ -29,4 +29,10 @@
     <string name="bottom_chat_title">会話</string>
     <string name="bottom_history_title">履歴</string>
     <string name="bottom_setting_title">設定</string>
+    <string name="font_system_default">font_system_default</string>
+    <string name="notosans_regular">notosans_regular.ttf</string>
+    <string name="notosans_italic">notosans_italic.ttf</string>
+    <string name="notosans_bolditalic">notosans_bolditalic.ttf</string>
+    <string name="notosansjp_medium">notosansjp_medium.otf</string>
+    <string name="font_asset_folder">font/</string>
 </resources>
