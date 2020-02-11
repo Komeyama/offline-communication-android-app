@@ -34,7 +34,6 @@ enum class RequestResult{
 }
 
 enum class ConnectingStatus{
-    NOT_CONNECTING,
     CONNECTING,
     LOST
 }
@@ -117,8 +116,6 @@ class NearbyClient @Inject constructor(
             addOnSuccessListener {
                 Timber.d("success requestConnection! :%s", requestEndpointId)
                 connectionsClient.acceptConnection(requestEndpointId, payloadCallback)
-                _requestResult.postValue(RequestResult.SUCCESS)
-                _connectingStatus.postValue(ConnectingStatus.CONNECTING)
             }.addOnFailureListener {
                 Timber.d("failure requestConnection!")
                 _requestResult.postValue(RequestResult.CANCELED)
@@ -189,6 +186,8 @@ class NearbyClient @Inject constructor(
             when(result.status.statusCode) {
                 STATUS_OK-> {
                     connectedEndpointId = endpointId
+                    _requestResult.postValue(RequestResult.SUCCESS)
+                    _connectingStatus.postValue(ConnectingStatus.CONNECTING)
                 }
                 else -> {
                     _connectingStatus.postValue(ConnectingStatus.LOST)
