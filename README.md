@@ -1,9 +1,4 @@
-Covertly
-====
-[![release version](https://img.shields.io/badge/version-1.0-yellow)](https://img.shields.io/badge/version-1.0-yellow)
-[![platform](https://img.shields.io/badge/platform-android-lightgrey)](https://img.shields.io/badge/platform-android-lightgrey)
-[![build status](https://img.shields.io/badge/build-passing-green)](https://img.shields.io/badge/build-passing-green)
-
+# Covertly
 Covertly is offline peer to peer chat app using [Nearby ConnectionsAPI](https://developers.google.com/nearby/connections/overview).
 
 ## Feature
